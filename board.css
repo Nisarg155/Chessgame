@@ -2,6 +2,9 @@
     width: 4.0625rem;
 }
 
+.pieces_pawn {
+    width: 3.5rem;
+}
 
 #board{
     justify-content: center;
