@@ -1,0 +1,34 @@
+#board{
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    justify-items: center;
+}
+
+ul {
+    display: flex;
+}
+
+li {
+    width: 6.25rem;
+    height: 6.25rem; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.first>li:nth-of-type(2n) {
+    background-color: #ddb180;
+}
+
+.second>li:nth-of-type(2n) {
+    background-color: #7c330c;
+}
+
+.first>li:nth-of-type(2n+1) {
+    background-color: #7c330c;
+}
+
+.second>li:nth-of-type(2n+1) {
+    background-color: #ddb180;
+}
