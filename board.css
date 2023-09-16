@@ -1,3 +1,8 @@
+.pieces{
+    width: 65px;
+}
+
+
 #board{
     justify-content: center;
     align-items: center;
