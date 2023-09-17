@@ -7,6 +7,38 @@ function draw(array)
     });
 }
 
+function undraw(array)
+{
+    array.forEach(element => {
+        let li = document.getElementById(element);
+        li.classList.remove('highlight');
+    });
+}
+
+
+function check(id)
+{
+    for(let i = -1;i<=1;i++)
+    {
+        for(let j = -1 ;j<=1;j++)
+        {
+            let delr = i + parseInt(id[0]);
+            let delc = j + parseInt(id[1]);
+
+            if(delr>=0 && delr<=7 && delc>=0 && delc<=7)
+            {
+                let div = document.getElementById('' + delr + delc);
+                if(div.classList.contains('highlight'))
+                {
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
+}
+
 
 function visl_biop(id) {
     let top_left = [];
@@ -52,10 +84,19 @@ function visl_biop(id) {
         top_right.push('' + row + col);
     }
 
+    if(check(id))
+    {
+        undraw(top_left);
+        undraw(top_right);
+        undraw(bottom_right);
+        undraw(bottom_left);
+    }
+    else{
     draw(top_left);
     draw(top_right);
     draw(bottom_right);
     draw(bottom_left);
+    }
 }
 
 function visl_rook(id) {
