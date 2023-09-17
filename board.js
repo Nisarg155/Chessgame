@@ -23,7 +23,39 @@ function visl_biop(id) {
         top_left.push('' + l + r);
     }
 
+    let row = parseInt(id[0]);
+    let col = parseInt(id[1]);
+
+    while(row>=0 && col<=7 && row<7 && col>0)
+    {
+        col--;
+        row++;
+        top_right.push('' + row + col);
+    }
+
+    row = parseInt(id[0]);
+    col = parseInt(id[1]);
+
+    while(row>=0 && col>=0 && row<7 && col<7) {
+        row++;
+        col++;
+        bottom_right.push('' + row + col);
+    }
+
+    row = parseInt(id[0]);
+    col = parseInt(id[1]);
+
+    while(row>0 && col<7 && row<=7 && col>=0)
+    {
+        col++;
+        row--;
+        bottom_left.push('' + row + col);
+    }
+
     draw(top_left);
+    draw(top_right);
+    draw(bottom_right);
+    draw(bottom_left);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
