@@ -30,7 +30,7 @@ function visl_biop(id) {
     {
         col--;
         row++;
-        top_right.push('' + row + col);
+        bottom_left.push('' + row + col);
     }
 
     row = parseInt(id[0]);
@@ -53,10 +53,11 @@ function visl_biop(id) {
     }
 
     draw(top_left);
-    draw(top_right);
+    draw(bottom_left);
     draw(bottom_right);
     draw(bottom_left);
 }
+
 
 document.addEventListener('DOMContentLoaded', () => {
     
@@ -78,10 +79,22 @@ document.addEventListener('DOMContentLoaded', () => {
         visl_biop(Wbishop2.parentElement.id);
     });
 
-
-
-
+    let Brook1 = document.getElementById('Brook1');
+    let Brook2 = document.getElementById('Brook2');
+    let Wrook1 = document.getElementById('Wrook1');
+    let Wrook2 = document.getElementById('Wrook2');
     
-    
+    Brook1.parentNode.addEventListener('click',()=>{
+        visl_rook(Brook1.parentElement.id);
+    })
+    Brook2.parentNode.addEventListener('click',()=>{
+        visl_rook(Brook2.parentElement.id);
+    })
+    Wrook1.parentNode.addEventListener('click',()=>{
+        visl_rook(Wrook1.parentElement.id);
+    })
+    Wrook2.parentNode.addEventListener('click',()=>{
+        visl_rook(Wrook2.parentElement.id);
+    })
 
 });
