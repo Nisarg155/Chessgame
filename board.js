@@ -52,14 +52,59 @@ function visl_biop(id) {
         top_right.push('' + row + col);
     }
 
-    console.log(top_right);
-    console.log(bottom_left);
     draw(top_left);
     draw(top_right);
     draw(bottom_right);
     draw(bottom_left);
 }
 
+function visl_rook(id) {
+    let front = [];
+    let back = [];
+    let right = [];
+    let left = [];
+
+    let row=parseInt(id[0]); 
+    let col=parseInt(id[1]); 
+
+    while(row>0 && row<=7 && col>=0 && col<=7)
+    {
+        row--;
+        front.push('' + row + col);
+    }
+
+    row=parseInt(id[0]);
+    col=parseInt(id[1]);
+
+    while(row>=0 && row<7 && col>=0 && col<=7)
+    {
+        row++;
+        back.push('' + row + col);
+    }
+
+    row=parseInt(id[0]);
+    col=parseInt(id[1]);
+
+    while(row>=0 && row<=7 && col>0 && col<=7)
+    {
+        col--;
+        left.push('' + row + col);
+    }
+
+    row=parseInt(id[0]);
+    col=parseInt(id[1]);
+
+    while(row>=0 && row<=7 && col>=0 && col<7)
+    {
+        col++;
+        right.push('' + row + col);
+    }
+
+    draw(right);
+    draw(left);
+    draw(back);
+    draw(front);
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     
