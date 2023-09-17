@@ -49,11 +49,13 @@ function visl_biop(id) {
     {
         col++;
         row--;
-        bottom_left.push('' + row + col);
+        top_right.push('' + row + col);
     }
 
+    console.log(top_right);
+    console.log(bottom_left);
     draw(top_left);
-    draw(bottom_left);
+    draw(top_right);
     draw(bottom_right);
     draw(bottom_left);
 }
