@@ -141,10 +141,19 @@ function visl_rook(id) {
         right.push('' + row + col);
     }
 
+    if(check(id))
+    {
+        undraw(front);
+        undraw(back);
+        undraw(right);
+        undraw(left);
+    }
+    else{
     draw(right);
     draw(left);
     draw(back);
     draw(front);
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
