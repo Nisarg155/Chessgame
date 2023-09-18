@@ -40,7 +40,7 @@ function check(id)
 }
 
 
-function visl_biop(id) {
+function visl_biop(id,flag=0) {
     let top_left = [];
     let top_right = [];
     let bottom_left = [];
@@ -84,7 +84,7 @@ function visl_biop(id) {
         top_right.push('' + row + col);
     }
 
-    if(check(id))
+    if(check(id) && flag==0)
     {
         undraw(top_left);
         undraw(top_right);
@@ -99,7 +99,7 @@ function visl_biop(id) {
     }
 }
 
-function visl_rook(id) {
+function visl_rook(id,flag=0) {
     let front = [];
     let back = [];
     let right = [];
@@ -141,7 +141,7 @@ function visl_rook(id) {
         right.push('' + row + col);
     }
 
-    if(check(id))
+    if(check(id) && flag==0)
     {
         undraw(front);
         undraw(back);
@@ -154,6 +154,103 @@ function visl_rook(id) {
     draw(back);
     draw(front);
     }
+}
+
+function visl_king(id)
+{
+    let row=parseInt(id[0]);
+    let col=parseInt(id[1]);
+
+    let movement = [];
+    console.log(row);
+    console.log(col);
+
+    if(row-1>=0 && col-1>=0)
+    {
+        row--;
+        col--;
+        movement.push('' +  row + col);
+    }   
+
+    row=parseInt(id[0]);
+    col=parseInt(id[1]);
+
+    if(col-1>=0)
+    {
+        col--;
+        movement.push('' + row + col);
+    }
+
+    row=parseInt(id[0]);
+    col=parseInt(id[1]);
+
+    if(row+1<=7 && col-1>=0)
+    {
+        row++;
+        col--;
+        movement.push('' + row + col);    
+    }
+
+    row=parseInt(id[0]);
+    col=parseInt(id[1]);
+
+    if(row-1>=0)
+    {
+        row--;
+        movement.push('' + row + col);
+    }
+
+    row=parseInt(id[0]);
+    col=parseInt(id[1]);
+
+    if(row+1<=7)
+    {
+        row++;
+        movement.push('' + row + col);
+    }
+
+    row=parseInt(id[0]);
+    col=parseInt(id[1]);
+
+    if(row-1>=0 && col+1<=7)
+    {
+        row--;
+        col++;
+        movement.push('' + row + col);
+    }
+
+    row=parseInt(id[0]);
+    col=parseInt(id[1]);
+
+    if(col+1<=7)
+    {
+        col++;
+        movement.push('' + row + col);
+    }
+
+    row=parseInt(id[0]);
+    col=parseInt(id[1]);
+
+    if(col+1<=7 && row+1<=7)
+    {
+        row++;
+        col++;
+        movement.push('' + row + col);
+    }
+
+    if(check(id))
+    {
+        undraw(movement);
+    }
+    else
+    {
+        draw(movement);
+    }
+}
+
+function visl_queen(id,flag){
+    visl_biop(id,flag);
+    visl_rook(id,flag);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -192,6 +289,36 @@ document.addEventListener('DOMContentLoaded', () => {
     })
     Wrook2.parentNode.addEventListener('click',()=>{
         visl_rook(Wrook2.parentElement.id);
+    })
+
+    let Bking = document.getElementById('Bking');
+    let Wking = document.getElementById('Wking');
+
+    Bking.parentNode.addEventListener('click' ,()=>{
+        visl_king(Bking.parentElement.id);
+    })
+
+    Wking.parentNode.addEventListener('click', ()=>{
+        visl_king(Wking.parentElement.id);
+    })
+
+    let Bqueen = document.getElementById('Bqueen');
+    let Wqueen = document.getElementById('Wqueen');
+    
+    let flag1=1;
+    Bqueen.parentNode.addEventListener('click', ()=>{
+        if(flag1>0)
+            visl_queen(Bqueen.parentNode.id,flag1--);
+        else
+            visl_queen(Bqueen.parentNode.id,flag1++);
+    })
+
+    let flag2=1;
+    Wqueen.parentNode.addEventListener('click',()=>{
+        if(flag2>0)
+            visl_queen(Wqueen.parentNode.id,flag2--);
+        else
+            visl_queen(Wqueen.parentNode.id,flag2++);
     })
 
 });
