@@ -18,6 +18,7 @@ function undraw(array)
 
 function check(id)
 {
+    //! condition for all other pieces
     for(let i = -1;i<=1;i++)
     {
         for(let j = -1 ;j<=1;j++)
@@ -35,7 +36,6 @@ function check(id)
             }
         }
     }
-
     return false;
 }
 
@@ -156,6 +156,32 @@ function visl_rook(id) {
     }
 }
 
+function visl_knight(id) {
+    let delrc = [[-1,-2],[-2,-1],[-2,1],[-1,2],[1,2],[2,1],[2,-1],[1,-2]];
+    let array = [];
+
+    delrc.forEach(element =>{
+        let [l,r] = element;
+        let delr = l + parseInt(id[0]);
+        let delc = r + parseInt(id[1]);
+
+        if(delr>= 0 && delc >= 0 && delr <= 7 && delc <= 7)
+        {
+            array.push('' + delr + delc);
+        }
+
+        if(knight_check(id))
+        {
+            undraw(array);
+        }
+        else{
+            draw(array);
+        }
+    });
+}
+
+    
+
 document.addEventListener('DOMContentLoaded', () => {
     
     let Bbishop1 = document.getElementById('Bbishop1');
@@ -192,6 +218,24 @@ document.addEventListener('DOMContentLoaded', () => {
     })
     Wrook2.parentNode.addEventListener('click',()=>{
         visl_rook(Wrook2.parentElement.id);
+    })
+
+    let Bknight1 = document.getElementById('Bknight1');
+    let Bknight2 = document.getElementById('Bknight2');
+    let Wknight1 = document.getElementById('Wknight1');
+    let Wknight2 = document.getElementById('Wknight2');
+
+    Bknight1.parentNode.addEventListener('click',()=>{
+        visl_knight(Bknight1.parentElement.id);
+    })
+    Bknight2.parentNode.addEventListener('click',()=>{
+        visl_knight(Bknight2.parentElement.id);
+    })
+    Wknight1.parentNode.addEventListener('click',()=>{
+        visl_knight(Wknight1.parentElement.id);
+    })
+    Wknight2.parentNode.addEventListener('click',()=>{
+        visl_knight(Wknight2.parentElement.id);
     })
 
 });
