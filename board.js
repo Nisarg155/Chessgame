@@ -40,7 +40,7 @@ function check(id)
 
 
 
-function visl_biop(id) {
+function visl_biop(id,flag=0) {
     let top_left = [];
     let top_right = [];
     let bottom_left = [];
@@ -84,7 +84,7 @@ function visl_biop(id) {
         top_right.push('' + row + col);
     }
 
-    if(check(id))
+    if(check(id) && flag==0)
     {
         undraw(top_left);
         undraw(top_right);
@@ -99,7 +99,7 @@ function visl_biop(id) {
     }
 }
 
-function visl_rook(id) {
+function visl_rook(id,flag=0) {
     let front = [];
     let back = [];
     let right = [];
@@ -141,7 +141,7 @@ function visl_rook(id) {
         right.push('' + row + col);
     }
 
-    if(check(id))
+    if(check(id) && flag==0)
     {
         undraw(front);
         undraw(back);
@@ -153,6 +153,149 @@ function visl_rook(id) {
     draw(left);
     draw(back);
     draw(front);
+    }
+}
+
+function visl_king(id)
+{
+    let row=parseInt(id[0]);
+    let col=parseInt(id[1]);
+
+    let movement = [];
+    console.log(row);
+    console.log(col);
+
+    if(row-1>=0 && col-1>=0)
+    {
+        row--;
+        col--;
+        movement.push('' +  row + col);
+    }   
+
+    row=parseInt(id[0]);
+    col=parseInt(id[1]);
+
+    if(col-1>=0)
+    {
+        col--;
+        movement.push('' + row + col);
+    }
+
+    row=parseInt(id[0]);
+    col=parseInt(id[1]);
+
+    if(row+1<=7 && col-1>=0)
+    {
+        row++;
+        col--;
+        movement.push('' + row + col);    
+    }
+
+    row=parseInt(id[0]);
+    col=parseInt(id[1]);
+
+    if(row-1>=0)
+    {
+        row--;
+        movement.push('' + row + col);
+    }
+
+    row=parseInt(id[0]);
+    col=parseInt(id[1]);
+
+    if(row+1<=7)
+    {
+        row++;
+        movement.push('' + row + col);
+    }
+
+    row=parseInt(id[0]);
+    col=parseInt(id[1]);
+
+    if(row-1>=0 && col+1<=7)
+    {
+        row--;
+        col++;
+        movement.push('' + row + col);
+    }
+
+    row=parseInt(id[0]);
+    col=parseInt(id[1]);
+
+    if(col+1<=7)
+    {
+        col++;
+        movement.push('' + row + col);
+    }
+
+    row=parseInt(id[0]);
+    col=parseInt(id[1]);
+
+    if(col+1<=7 && row+1<=7)
+    {
+        row++;
+        col++;
+        movement.push('' + row + col);
+    }
+
+    if(check(id))
+    {
+        undraw(movement);
+    }
+    else
+    {
+        draw(movement);
+    }
+}
+
+function visl_queen(id,flag){
+    visl_biop(id,flag);
+    visl_rook(id,flag);
+}
+
+function visl_pawn(id,color)
+{
+    let movement = [];
+    
+    let row = parseInt(id[0]);
+    let col = parseInt(id[1]);
+    console.log(row);
+    console.log(col);
+    if(row==1 && color=='B')
+    {
+        row++;
+        movement.push('' + row + col);
+        row++;
+        movement.push('' + row + col);
+    }
+    else if(row==6 && color=='W')
+    {
+        row--;
+        movement.push('' + row + col);
+        row--;
+        movement.push('' + row + col);
+    }
+    else if(color=='B' && row+1<=7)
+    {
+        row++;
+        movement.push('' + row + col);
+    }
+    else
+    {
+        if(row-1>=0)
+        {
+            row--;
+            movement.push('' + row + col);
+        }
+    }
+
+    if(check(id))
+    {
+        undraw(movement);
+    }
+    else
+    {
+        draw(movement);
     }
 }
 
@@ -209,24 +352,6 @@ document.addEventListener('DOMContentLoaded', () => {
     })
     Wrook2.parentNode.addEventListener('click',()=>{
         visl_rook(Wrook2.parentElement.id);
-    })
-
-    let Bknight1 = document.getElementById('Bknight1');
-    let Bknight2 = document.getElementById('Bknight2');
-    let Wknight1 = document.getElementById('Wknight1');
-    let Wknight2 = document.getElementById('Wknight2');
-
-    Bknight1.parentNode.addEventListener('click',()=>{
-        visl_knight(Bknight1.parentElement.id);
-    })
-    Bknight2.parentNode.addEventListener('click',()=>{
-        visl_knight(Bknight2.parentElement.id);
-    })
-    Wknight1.parentNode.addEventListener('click',()=>{
-        visl_knight(Wknight1.parentElement.id);
-    })
-    Wknight2.parentNode.addEventListener('click',()=>{
-        visl_knight(Wknight2.parentElement.id);
     })
 
 });
