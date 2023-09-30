@@ -354,4 +354,102 @@ document.addEventListener('DOMContentLoaded', () => {
         visl_rook(Wrook2.parentElement.id);
     })
 
+let Bking = document.getElementById('Bking');
+    let Wking = document.getElementById('Wking');
+
+    Bking.parentNode.addEventListener('click' ,()=>{
+        visl_king(Bking.parentElement.id);
+    })
+
+    Wking.parentNode.addEventListener('click', ()=>{
+        visl_king(Wking.parentElement.id);
+    })
+
+    let Bqueen = document.getElementById('Bqueen');
+    let Wqueen = document.getElementById('Wqueen');
+    
+    let flag1=1;
+    Bqueen.parentNode.addEventListener('click', ()=>{
+        if(flag1>0)
+            visl_queen(Bqueen.parentNode.id,flag1--);
+        else
+            visl_queen(Bqueen.parentNode.id,flag1++);
+    })
+
+    let flag2=1;
+    Wqueen.parentNode.addEventListener('click',()=>{
+        if(flag2>0)
+            visl_queen(Wqueen.parentNode.id,flag2--);
+        else
+            visl_queen(Wqueen.parentNode.id,flag2++);
+    })
+
+    let Bpawn1=document.getElementById('Bpawn1');
+    let Bpawn2=document.getElementById('Bpawn2');
+    let Bpawn3=document.getElementById('Bpawn3');
+    let Bpawn4=document.getElementById('Bpawn4');
+    let Bpawn5=document.getElementById('Bpawn5');
+    let Bpawn6=document.getElementById('Bpawn6');
+    let Bpawn7=document.getElementById('Bpawn7');
+    let Bpawn8=document.getElementById('Bpawn8');
+
+    let Wpawn1=document.getElementById('Wpawn1');
+    let Wpawn2=document.getElementById('Wpawn2');
+    let Wpawn3=document.getElementById('Wpawn3');
+    let Wpawn4=document.getElementById('Wpawn4');
+    let Wpawn5=document.getElementById('Wpawn5');
+    let Wpawn6=document.getElementById('Wpawn6');
+    let Wpawn7=document.getElementById('Wpawn7');
+    let Wpawn8=document.getElementById('Wpawn8');
+
+    Bpawn1.parentNode.addEventListener('click',()=>{
+        visl_pawn(Bpawn1.parentNode.id,'B');
+    })
+    Bpawn2.parentNode.addEventListener('click',()=>{
+        visl_pawn(Bpawn2.parentNode.id,'B');
+    })
+    Bpawn3.parentNode.addEventListener('click',()=>{
+        visl_pawn(Bpawn3.parentNode.id,'B');
+    })
+    Bpawn4.parentNode.addEventListener('click',()=>{
+        visl_pawn(Bpawn4.parentNode.id,'B');
+    })
+    Bpawn5.parentNode.addEventListener('click',()=>{
+        visl_pawn(Bpawn5.parentNode.id,'B');
+    })
+    Bpawn6.parentNode.addEventListener('click',()=>{
+        visl_pawn(Bpawn6.parentNode.id,'B');
+    })
+    Bpawn7.parentNode.addEventListener('click',()=>{
+        visl_pawn(Bpawn7.parentNode.id,'B');
+    })
+    Bpawn8.parentNode.addEventListener('click',()=>{
+        visl_pawn(Bpawn8.parentNode.id,'B');
+    })
+
+    Wpawn1.parentNode.addEventListener('click',()=>{
+        visl_pawn(Wpawn1.parentNode.id,'W');
+    })
+    Wpawn2.parentNode.addEventListener('click',()=>{
+        visl_pawn(Wpawn2.parentNode.id,'W');
+    })
+    Wpawn3.parentNode.addEventListener('click',()=>{
+        visl_pawn(Wpawn3.parentNode.id,'W');
+    })
+    Wpawn4.parentNode.addEventListener('click',()=>{
+        visl_pawn(Wpawn4.parentNode.id,'W');
+    })
+    Wpawn5.parentNode.addEventListener('click',()=>{
+        visl_pawn(Wpawn5.parentNode.id,'W');
+    })
+    Wpawn6.parentNode.addEventListener('click',()=>{
+        visl_pawn(Wpawn6.parentNode.id,'W');
+    })
+    Wpawn7.parentNode.addEventListener('click',()=>{
+        visl_pawn(Wpawn7.parentNode.id,'W');
+    })
+    Wpawn8.parentNode.addEventListener('click',()=>{
+        visl_pawn(Wpawn8.parentNode.id,'W');
+    })
+
 });
