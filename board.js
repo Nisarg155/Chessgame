@@ -15,7 +15,7 @@ function undraw(array)
 }
 
 
-function check(id)
+function check(id) //! to remove
 {
     //! condition for all other pieces
     for(let i = -1;i<=1;i++)
@@ -40,7 +40,7 @@ function check(id)
 
 
 
-function visl_biop(id,flag=0) {
+function visl_biop(id,flag=0) { //!changed by nisarg
     let top_left = [];
     let top_right = [];
     let bottom_left = [];
@@ -159,7 +159,7 @@ function visl_rook(id,flag=0) {
     }
 }
 
-function visl_king(id)
+function visl_king(id) //! changed by nisarg
 {
     let row=parseInt(id[0]);
     let col=parseInt(id[1]);
@@ -240,13 +240,15 @@ function visl_king(id)
         col++;
         movement.push('' + row + col);
     }
-
-    if(check(id))
+    let ele = document.getElementById(id);
+    if(ele.classList.contains('clicked'))
     {
+        ele.classList.remove('clicked');
         undraw(movement);
     }
     else
     {
+        ele.classList.add('clicked');
         draw(movement);
     }
 }
