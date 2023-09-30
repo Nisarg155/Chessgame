@@ -13,28 +13,6 @@ function undraw(array)
         li.classList.remove('highlight');
     });
 }
-function check(id)
-{
-    //! condition for all other pieces
-    for(let i = -1;i<=1;i++)
-    {
-        for(let j = -1 ;j<=1;j++)
-        {
-            let delr = i + parseInt(id[0]);
-            let delc = j + parseInt(id[1]);
-
-            if(delr>=0 && delr<=7 && delc>=0 && delc<=7)
-            {
-                let div = document.getElementById('' + delr + delc);
-                if(div.classList.contains('highlight'))
-                {
-                    return true;
-                }
-            }
-        }
-    }    
-    return false;
-}
 
 function visl_biop(id,flag=0) {
     let top_left = [];
@@ -137,19 +115,24 @@ function visl_rook(id,flag=0) {
         right.push('' + row + col);
     }
 
-    if(check(id) && flag==0)
+    let div=document.getElementById(id);
+    if(div.classList.contains('clicked'))
     {
         undraw(front);
-        undraw(back);
-        undraw(right);
         undraw(left);
+        undraw(right);
+        undraw(back);
+        div.classList.remove('clicked');
     }
-    else{
-    draw(right);
-    draw(left);
-    draw(back);
-    draw(front);
+    else
+    {
+        draw(front);
+        draw(back);
+        draw(right);
+        draw(left);
+        div.classList.add('clicked');
     }
+
 }
 
 function visl_king(id)
@@ -281,12 +264,15 @@ function visl_pawn(id,color)
         }
     }
 
-    if(check(id))
+    let div=document.getElementById(id);
+    if(div.classList.contains('clicked'))
     {
+        div.classList.remove('clicked');
         undraw(movement);
     }
     else
     {
+        div.classList.add('clicked')
         draw(movement);
     }
 }
@@ -304,12 +290,15 @@ function visl_knight(id) {
             array.push('' + delr + delc);
         }
     });
-    if(check_knight(id,array))
+    let div=document.getElementById(id);
+    if(div.classList.contains('clicked'))
     {
+        div.classList.remove('clicked');
         undraw(array);
     }
     else
     {
+        div.classList.add('clicked');
         draw(array);
     }
 }
