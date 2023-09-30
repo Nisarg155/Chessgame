@@ -230,9 +230,105 @@ function visl_king(id) //! changed by nisarg
     }
 }
 
-function visl_queen(id,flag){
-    visl_biop(id,flag);
-    visl_rook(id,flag);
+function visl_queen(id){
+    visl_biop(id);
+    visl_rook(id);
+    let top_left = [];
+    let top_right = [];
+    let bottom_left = [];
+    let bottom_right = [];
+
+    let l = parseInt(id[0]);
+    let r = parseInt(id[1]);
+
+    while (l >0  && r >0 && l <= 7 && r <= 7) {
+        l--;
+        r--;
+        top_left.push('' + l + r);
+    }
+
+    let row = parseInt(id[0]);
+    let col = parseInt(id[1]);
+
+    while(row>=0 && col<=7 && row<7 && col>0)
+    {
+        col--;
+        row++;
+        bottom_left.push('' + row + col);
+    }
+
+    row = parseInt(id[0]);
+    col = parseInt(id[1]);
+
+    while(row>=0 && col>=0 && row<7 && col<7) {
+        row++;
+        col++;
+        bottom_right.push('' + row + col);
+    }
+
+    row = parseInt(id[0]);
+    col = parseInt(id[1]);
+
+    while(row>0 && col<7 && row<=7 && col>=0)
+    {
+        col++;
+        row--;
+        top_right.push('' + row + col);
+    }
+    let front = [];
+    let back = [];
+    let right = [];
+    let left = [];
+
+    row=parseInt(id[0]); 
+    col=parseInt(id[1]); 
+
+    while(row>0 && row<=7 && col>=0 && col<=7)
+    {
+        row--;
+        front.push('' + row + col);
+    }
+
+    row=parseInt(id[0]);
+    col=parseInt(id[1]);
+
+    while(row>=0 && row<7 && col>=0 && col<=7)
+    {
+        row++;
+        back.push('' + row + col);
+    }
+
+    row=parseInt(id[0]);
+    col=parseInt(id[1]);
+
+    while(row>=0 && row<=7 && col>0 && col<=7)
+    {
+        col--;
+        left.push('' + row + col);
+    }
+
+    row=parseInt(id[0]);
+    col=parseInt(id[1]);
+
+    while(row>=0 && row<=7 && col>=0 && col<7)
+    {
+        col++;
+        right.push('' + row + col);
+    }
+
+    let div=document.getElementById(id);
+    if(div.classList.contains('clicked'))
+    {
+        div.classList.remove('clicked');
+        undraw(front),undraw(back),undraw(right),undraw(left);
+        undraw(bottom_left),undraw(bottom_right),undraw(top_left),undraw(top_right);
+    }
+    else
+    {
+        div.classList.add('clicked');
+        draw(front),draw(back),draw(right),draw(left);
+        draw(bottom_left),draw(bottom_right),draw(top_left),draw(top_right);
+    }
 }
 
 function visl_pawn(id,color)
@@ -383,20 +479,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let Bqueen = document.getElementById('Bqueen');
     let Wqueen = document.getElementById('Wqueen');
     
-    let flag1=1;
     Bqueen.parentNode.addEventListener('click', ()=>{
-        if(flag1>0)
-            visl_queen(Bqueen.parentNode.id,flag1--);
-        else
-            visl_queen(Bqueen.parentNode.id,flag1++);
+        visl_queen(Bqueen.parentNode.id);
     })
 
-    let flag2=1;
     Wqueen.parentNode.addEventListener('click',()=>{
-        if(flag2>0)
-            visl_queen(Wqueen.parentNode.id,flag2--);
-        else
-            visl_queen(Wqueen.parentNode.id,flag2++);
+        visl_queen(Wqueen.parentNode.id);
     })
 
     let Bpawn1=document.getElementById('Bpawn1');
