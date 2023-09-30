@@ -1,4 +1,3 @@
-
 function draw(array)
 {
     array.forEach(element => {
@@ -35,9 +34,10 @@ function check(id)
                 }
             }
         }
-    }
+    }    
     return false;
 }
+
 
 
 function visl_biop(id) {
@@ -158,8 +158,7 @@ function visl_rook(id) {
 
 function visl_knight(id) {
     let delrc = [[-1,-2],[-2,-1],[-2,1],[-1,2],[1,2],[2,1],[2,-1],[1,-2]];
-    let array = [];
-
+    let array = [];    
     delrc.forEach(element =>{
         let [l,r] = element;
         let delr = l + parseInt(id[0]);
@@ -168,14 +167,6 @@ function visl_knight(id) {
         if(delr>= 0 && delc >= 0 && delr <= 7 && delc <= 7)
         {
             array.push('' + delr + delc);
-        }
-
-        if(knight_check(id))
-        {
-            undraw(array);
-        }
-        else{
-            draw(array);
         }
     });
 }
