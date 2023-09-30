@@ -13,8 +13,6 @@ function undraw(array)
         li.classList.remove('highlight');
     });
 }
-
-
 function check(id)
 {
     //! condition for all other pieces
@@ -37,8 +35,6 @@ function check(id)
     }    
     return false;
 }
-
-
 
 function visl_biop(id,flag=0) {
     let top_left = [];
@@ -162,9 +158,7 @@ function visl_king(id)
     let col=parseInt(id[1]);
 
     let movement = [];
-    console.log(row);
-    console.log(col);
-
+    
     if(row-1>=0 && col-1>=0)
     {
         row--;
@@ -259,8 +253,6 @@ function visl_pawn(id,color)
     
     let row = parseInt(id[0]);
     let col = parseInt(id[1]);
-    console.log(row);
-    console.log(col);
     if(row==1 && color=='B')
     {
         row++;
@@ -312,12 +304,41 @@ function visl_knight(id) {
             array.push('' + delr + delc);
         }
     });
+    if(check_knight(id,array))
+    {
+        undraw(array);
+    }
+    else
+    {
+        draw(array);
+    }
 }
 
     
 
 document.addEventListener('DOMContentLoaded', () => {
+
+    let Bknight1=document.getElementById('Bknight1');
+    let Bknight2=document.getElementById('Bknight2');
+    let Wknight1=document.getElementById('Wknight1');
+    let Wknight2=document.getElementById('Wknight2');
+
+    Bknight1.parentNode.addEventListener('click',()=>{
+        visl_knight(Bknight1.parentElement.id);
+    })
     
+    Bknight2.parentNode.addEventListener('click',()=>{
+        visl_knight(Bknight2.parentElement.id);
+    })
+
+    Wknight1.parentNode.addEventListener('click',()=>{
+        visl_knight(Wknight1.parentElement.id);
+    })
+
+    Wknight2.parentNode.addEventListener('click',()=>{
+        visl_knight(Wknight2.parentElement.id);
+    })
+
     let Bbishop1 = document.getElementById('Bbishop1');
     let Bbishop2 = document.getElementById('Bbishop2')
     let Wbishop1 = document.getElementById('Wbishop1')
@@ -354,7 +375,7 @@ document.addEventListener('DOMContentLoaded', () => {
         visl_rook(Wrook2.parentElement.id);
     })
 
-let Bking = document.getElementById('Bking');
+    let Bking = document.getElementById('Bking');
     let Wking = document.getElementById('Wking');
 
     Bking.parentNode.addEventListener('click' ,()=>{
