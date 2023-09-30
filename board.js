@@ -84,14 +84,17 @@ function visl_biop(id,flag=0) {
         top_right.push('' + row + col);
     }
 
-    if(check(id) && flag==0)
+    let ele = document.getElementById(id);
+    if(ele.classList.contains('clicked'))
     {
+        ele.classList.remove('clicked');
         undraw(top_left);
         undraw(top_right);
         undraw(bottom_right);
         undraw(bottom_left);
     }
     else{
+        ele.classList.add('clicked');
     draw(top_left);
     draw(top_right);
     draw(bottom_right);
