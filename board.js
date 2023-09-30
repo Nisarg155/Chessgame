@@ -1,8 +1,23 @@
-function draw(array)
+function draw(array,idm)
 {
+    let clr = idm[0];
+    console.log(clr);
+    let flag = false;
     array.forEach(element => {
         let div = document.getElementById(element);
-        div.classList.add('highlight');
+        let cid = div.querySelector('img');
+        if(cid)
+        {
+            let cclr = (cid.id)[0];
+            if(cclr == clr)
+            {
+                flag = true;
+            }
+        }
+        else if(flag == false)  {
+            div.classList.add('highlight');
+
+        }
     });
 }
 
@@ -14,7 +29,7 @@ function undraw(array)
     });
 }
 
-function visl_biop(id,flag=0) {
+function visl_biop(id) {
     let top_left = [];
     let top_right = [];
     let bottom_left = [];
@@ -59,6 +74,8 @@ function visl_biop(id,flag=0) {
     }
 
     let ele = document.getElementById(id);
+    let idm = ele.querySelector('img').id;
+
     if(ele.classList.contains('clicked'))
     {
         ele.classList.remove('clicked');
@@ -69,14 +86,14 @@ function visl_biop(id,flag=0) {
     }
     else{
         ele.classList.add('clicked');
-    draw(top_left);
-    draw(top_right);
-    draw(bottom_right);
-    draw(bottom_left);
+    draw(top_left,idm);
+    draw(top_right,idm);
+    draw(bottom_right,idm);
+    draw(bottom_left,idm);
     }
 }
 
-function visl_rook(id,flag=0) {
+function visl_rook(id) {
     let front = [];
     let back = [];
     let right = [];
@@ -119,6 +136,7 @@ function visl_rook(id,flag=0) {
     }
 
     let div=document.getElementById(id);
+    let idm = div.querySelector('img').id;
     if(div.classList.contains('clicked'))
     {
         undraw(front);
@@ -129,10 +147,10 @@ function visl_rook(id,flag=0) {
     }
     else
     {
-        draw(front);
-        draw(back);
-        draw(right);
-        draw(left);
+        draw(front,idm);
+        draw(back,idm);
+        draw(right,idm);
+        draw(left,idm);
         div.classList.add('clicked');
     }
 
@@ -317,6 +335,7 @@ function visl_queen(id){
     }
 
     let div=document.getElementById(id);
+    let idm = div.querySelector('img').id;
     if(div.classList.contains('clicked'))
     {
         div.classList.remove('clicked');
@@ -326,8 +345,8 @@ function visl_queen(id){
     else
     {
         div.classList.add('clicked');
-        draw(front),draw(back),draw(right),draw(left);
-        draw(bottom_left),draw(bottom_right),draw(top_left),draw(top_right);
+        draw(front,idm),draw(back,idm),draw(right,idm),draw(left,idm);
+        draw(bottom_left,idm),draw(bottom_right,idm),draw(top_left,idm),draw(top_right,idm);
     }
 }
 
@@ -366,6 +385,7 @@ function visl_pawn(id,color)
     }
 
     let div=document.getElementById(id);
+    let idm = div.querySelector('img').id;
     if(div.classList.contains('clicked'))
     {
         div.classList.remove('clicked');
@@ -374,7 +394,7 @@ function visl_pawn(id,color)
     else
     {
         div.classList.add('clicked')
-        draw(movement);
+        draw(movement,idm);
     }
 }
 
