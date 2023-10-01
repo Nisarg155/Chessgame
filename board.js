@@ -1,7 +1,6 @@
 function draw(array,idm)
 {
     let clr = idm[0];
-    console.log(clr);
     let flag = false;
     array.forEach(element => {
         let div = document.getElementById(element);
@@ -13,10 +12,13 @@ function draw(array,idm)
             {
                 flag = true;
             }
+            else if(clr != cclr && flag == false)  {
+                flag = true;
+                div.style.backgroundColor = 'rgba(255, 0, 0, 0.85)';
+            }
         }
         else if(flag == false)  {
-            div.classList.add('highlight');
-
+            div.style.backgroundColor = 'rgba(0, 128, 0, 0.90)'
         }
     });
 }
@@ -32,14 +34,13 @@ function draw_s(array,idm)
         if(cid)
         {
             let cclr = (cid.id)[0];
-            if(cclr == clr)
+            if(cclr != clr)
             {
-                // flag = true;
+                div.style.backgroundColor = 'rgba(255, 0, 0, 0.85)';
             }
         }
         else if(flag == false)  {
-            div.classList.add('highlight');
-
+            div.style.backgroundColor = 'rgba(0, 128, 0, 0.90)'
         }
     });
 }
@@ -48,6 +49,18 @@ function undraw(array)
 {
     array.forEach(element => {
         let li = document.getElementById(element);
+        let row = parseInt(element[0]);
+        let col = parseInt(element[1]);
+        if(col %2 == 0)
+        {
+            if(row%2 == 0) li.style.backgroundColor = '#7c330c';
+            else li.style.backgroundColor = '#ddb180';
+        }
+        else{
+            if(row%2 == 0) li.style.backgroundColor = '#ddb180';
+            else li.style.backgroundColor = '#7c330c';
+        }
+
         li.classList.remove('highlight');
     });
 }
