@@ -21,6 +21,29 @@ function draw(array,idm)
     });
 }
 
+function draw_s(array,idm)
+{
+    let clr = idm[0];
+    console.log(clr);
+    let flag = false;
+    array.forEach(element => {
+        let div = document.getElementById(element);
+        let cid = div.querySelector('img');
+        if(cid)
+        {
+            let cclr = (cid.id)[0];
+            if(cclr == clr)
+            {
+                // flag = true;
+            }
+        }
+        else if(flag == false)  {
+            div.classList.add('highlight');
+
+        }
+    });
+}
+
 function undraw(array)
 {
     array.forEach(element => {
@@ -236,6 +259,7 @@ function visl_king(id) //! changed by nisarg
         movement.push('' + row + col);
     }
     let ele = document.getElementById(id);
+    let idm=ele.querySelector('img').id;
     if(ele.classList.contains('clicked'))
     {
         ele.classList.remove('clicked');
@@ -244,7 +268,7 @@ function visl_king(id) //! changed by nisarg
     else
     {
         ele.classList.add('clicked');
-        draw(movement);
+        draw_s(movement,idm);
     }
 }
 
@@ -410,8 +434,9 @@ function visl_knight(id) {
         {
             array.push('' + delr + delc);
         }
-    });
+    });    
     let div=document.getElementById(id);
+    let idm = div.querySelector('img').id;
     if(div.classList.contains('clicked'))
     {
         div.classList.remove('clicked');
@@ -420,7 +445,7 @@ function visl_knight(id) {
     else
     {
         div.classList.add('clicked');
-        draw(array);
+        draw_s(array,idm);
     }
 }
 
