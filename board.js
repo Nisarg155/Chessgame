@@ -3,13 +3,77 @@ function move_to(id1,id2)
     let d1 = document.getElementById(id1);
     let d2 = document.getElementById(id2);
     let img = d1.querySelector('img');
-    visl_biop(id1);
-    d1.removeChild(img);
+    // visl_biop(id1);
+    // d1.removeChild(img);
+    let length = img.id.length;
+    let p1 ;
+    if( !isNaN(img.id[length - 1]) )
+    {
+        p1 = (img.id).slice(1,img.id.length - 1);
+    }
+    else{
+        p1 = (img.id).slice(1);
+    }
+    switch(p1)
+    {
+        case 'bishop':
+            visl_biop(id1);
+            d1.removeChild(img);
+            break;
+        case 'rook':
+            visl_rook(id1);
+            d1.removeChild(img);
+            break;
+        case 'king':
+            visl_king(id1);
+            d1.removeChild(img);
+            break;
+        case 'queen':
+            visl_queen(id1);
+            d1.removeChild(img);
+            break;
+        case 'pawn':
+            visl_pawn(id1,img.id[0]);
+            d1.removeChild(img);
+            break;
+        case 'knight':
+            visl_knight(id1);
+            d1.removeChild(img);
+            break;
+    }
+    let p2 = d2.querySelector('img');
+    if(p2)
+    {
+        console.log(p2);
+        d2.onclick = null;
+        d2.removeChild(p2);
+    }
     d2.appendChild(img);
     d2.classList.remove('clicked');
     d1.onclick = null;
     d2.classList.remove('clicked');
-    d2.onclick = function() {visl_biop(id2);};
+    console.log(p1);
+    switch(p1)
+    {
+        case 'bishop':
+            d2.onclick = function() {visl_biop(id2);};
+            break;
+        case 'rook':
+            d2.onclick = function() {visl_rook(id2);};
+            break;
+        case 'king':
+            d2.onclick = function() {visl_king(id2);};
+            break;
+        case 'queen':
+            d2.onclick = function() {visl_queen(id2);};
+            break;
+        case 'pawn':
+            d2.onclick = function() {visl_pawn(id2,img.id[0]);};
+            break;
+        case 'knight':
+            d2.onclick = function() {visl_knight(id2);};
+            break;
+    }
 }
 
 function draw(array,idm,id)
@@ -29,6 +93,7 @@ function draw(array,idm,id)
             else if(clr != cclr && flag == false)  {
                 flag = true;
                 div.style.backgroundColor = 'rgba(255, 0, 0, 0.85)';
+                div.onclick  = function() {move_to(id,element);};
             }
         }
         else if(flag == false)  {
@@ -66,7 +131,33 @@ function undraw(array)
         let li = document.getElementById(element);
         let row = parseInt(element[0]);
         let col = parseInt(element[1]);
+        if(li.querySelector('img') == null)
         li.onclick = null;
+        else{
+            let piece = (li.querySelector('img').id);
+            let name = piece.slice(1,piece.length - 1);
+            switch(name)
+            {
+                case 'bishop':
+                    li.onclick = function() {visl_biop(element);};
+                    break;
+                case 'rook':
+                    li.onclick = function() {visl_rook(element);};
+                    break;
+                case 'king':
+                    li.onclick = function() {visl_king(element);};
+                    break;
+                case 'queen':
+                    li.onclick = function() {visl_queen(element);};
+                    break;
+                case 'pawn':
+                    li.onclick = function() {visl_pawn(element,piece[0]);};
+                    break;
+                case 'knight':
+                    li.onclick = function() {visl_knight(element);};
+                    break;
+            }
+        }
         if(col %2 == 0)
         {
             if(row%2 == 0) li.style.backgroundColor = '#7c330c';
@@ -197,10 +288,10 @@ function visl_rook(id) {
     }
     else
     {
-        draw(front,idm);
-        draw(back,idm);
-        draw(right,idm);
-        draw(left,idm);
+        draw(front,idm,id);
+        draw(back,idm,id);
+        draw(right,idm,id);
+        draw(left,idm,id);
         div.classList.add('clicked');
     }
 
@@ -300,8 +391,8 @@ function visl_king(id) //! changed by nisarg
 }
 
 function visl_queen(id){
-    visl_biop(id);
-    visl_rook(id);
+    // visl_biop(id);
+    // visl_rook(id);
     let top_left = [];
     let top_right = [];
     let bottom_left = [];
@@ -396,8 +487,9 @@ function visl_queen(id){
     else
     {
         div.classList.add('clicked');
-        draw(front,idm),draw(back,idm),draw(right,idm),draw(left,idm);
-        draw(bottom_left,idm),draw(bottom_right,idm),draw(top_left,idm),draw(top_right,idm);
+        draw(front,idm,id),
+        draw(back,idm,id),draw(right,idm,id),draw(left,idm,id);
+        draw(bottom_left,idm,id),draw(bottom_right,idm,id),draw(top_left,idm,id),draw(top_right,idm,id);
     }
 }
 
@@ -445,7 +537,7 @@ function visl_pawn(id,color)
     else
     {
         div.classList.add('clicked')
-        draw(movement,idm);
+        draw(movement,idm,id);
     }
 }
 
@@ -528,9 +620,7 @@ document.addEventListener('DOMContentLoaded', () => {
     Brook2.parentNode.addEventListener('click',()=>{
         visl_rook(Brook2.parentElement.id);
     })
-    Wrook1.parentNode.addEventListener('click',()=>{
-        visl_rook(Wrook1.parentElement.id);
-    })
+    Wrook1.parentNode.onclick = function() {visl_rook(Wrook1.parentElement.id);};
     Wrook2.parentNode.addEventListener('click',()=>{
         visl_rook(Wrook2.parentElement.id);
     })
@@ -553,9 +643,7 @@ document.addEventListener('DOMContentLoaded', () => {
         visl_queen(Bqueen.parentNode.id);
     })
 
-    Wqueen.parentNode.addEventListener('click',()=>{
-        visl_queen(Wqueen.parentNode.id);
-    })
+    Wqueen.parentNode.onclick = function() {visl_queen(Wqueen.parentElement.id);};
 
     let Bpawn1=document.getElementById('Bpawn1');
     let Bpawn2=document.getElementById('Bpawn2');
@@ -615,9 +703,7 @@ document.addEventListener('DOMContentLoaded', () => {
     Wpawn5.parentNode.addEventListener('click',()=>{
         visl_pawn(Wpawn5.parentNode.id,'W');
     })
-    Wpawn6.parentNode.addEventListener('click',()=>{
-        visl_pawn(Wpawn6.parentNode.id,'W');
-    })
+    Wpawn6.parentNode.onclick = function() {visl_pawn(Wpawn6.parentElement.id,'W');};
     Wpawn7.parentNode.addEventListener('click',()=>{
         visl_pawn(Wpawn7.parentNode.id,'W');
     })
