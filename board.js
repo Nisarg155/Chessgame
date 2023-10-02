@@ -1,4 +1,18 @@
-function draw(array,idm)
+function move_to(id1,id2)
+{
+    let d1 = document.getElementById(id1);
+    let d2 = document.getElementById(id2);
+    let img = d1.querySelector('img');
+    visl_biop(id1);
+    d1.removeChild(img);
+    d2.appendChild(img);
+    d2.classList.remove('clicked');
+    d1.onclick = null;
+    d2.classList.remove('clicked');
+    d2.onclick = function() {visl_biop(id2);};
+}
+
+function draw(array,idm,id)
 {
     let clr = idm[0];
     let flag = false;
@@ -19,6 +33,7 @@ function draw(array,idm)
         }
         else if(flag == false)  {
             div.style.backgroundColor = 'rgba(0, 128, 0, 0.90)'
+            div.onclick  = function() {move_to(id,element);};
         }
     });
 }
@@ -51,6 +66,7 @@ function undraw(array)
         let li = document.getElementById(element);
         let row = parseInt(element[0]);
         let col = parseInt(element[1]);
+        li.onclick = null;
         if(col %2 == 0)
         {
             if(row%2 == 0) li.style.backgroundColor = '#7c330c';
@@ -60,8 +76,6 @@ function undraw(array)
             if(row%2 == 0) li.style.backgroundColor = '#ddb180';
             else li.style.backgroundColor = '#7c330c';
         }
-
-        li.classList.remove('highlight');
     });
 }
 
@@ -122,10 +136,10 @@ function visl_biop(id) {
     }
     else{
         ele.classList.add('clicked');
-    draw(top_left,idm);
-    draw(top_right,idm);
-    draw(bottom_right,idm);
-    draw(bottom_left,idm);
+    draw(top_left,idm,id);
+    draw(top_right,idm,id);
+    draw(bottom_right,idm,id);
+    draw(bottom_left,idm,id);
     }
 }
 
@@ -492,9 +506,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let Wbishop1 = document.getElementById('Wbishop1')
     let Wbishop2 = document.getElementById('Wbishop2')
 
-    Bbishop1.parentNode.addEventListener('click', ()=>{
-        visl_biop(Bbishop1.parentElement.id);
-    });
+    Bbishop1.parentNode.onclick = function() {visl_biop(Bbishop1.parentElement.id);};
     Bbishop2.parentNode.addEventListener('click', ()=>{
         visl_biop(Bbishop2.parentElement.id);
     });
