@@ -44,7 +44,6 @@ function move_to(id1,id2)
     let p2 = d2.querySelector('img');
     if(p2)
     {
-        console.log(p2);
         d2.onclick = null;
         d2.removeChild(p2);
     }
@@ -62,9 +61,11 @@ function move_to(id1,id2)
             d2.onclick = function() {visl_rook(id2);};
             break;
         case 'king':
+            d2.onclick = null;
             d2.onclick = function() {visl_king(id2);};
             break;
         case 'queen':
+            d2.onclick = null;
             d2.onclick = function() {visl_queen(id2);};
             break;
         case 'pawn':
@@ -76,9 +77,29 @@ function move_to(id1,id2)
     }
 }
 
+function modify(cross,idm,id)
+{
+    let clr=idm[0];
+    let ans=[];
+    cross.forEach(element=>{
+        let div=document.getElementById(element);
+        let cid=div.querySelector('img');
+        if(cid)
+        {
+            let op=cid.id[0];
+            if(clr=='W' && op=='B')
+                ans.push(element);
+            else if(clr=='B' && op=='W')
+                ans.push(element);
+        }
+    });
+    return ans;
+}
+
 function draw(array,idm,id)
 {
     let clr = idm[0];
+    let name=idm.slice(1,idm.length-1);
     let flag = false;
     array.forEach(element => {
         let div = document.getElementById(element);
@@ -91,10 +112,19 @@ function draw(array,idm,id)
                 flag = true;
             }
             else if(clr != cclr && flag == false)  {
-                flag = true;
-                div.style.backgroundColor = 'rgba(255, 0, 0, 0.85)';
-                div.onclick  = function() {move_to(id,element);};
+                if(name!='pawn'){
+                    flag = true;
+                    div.style.backgroundColor = 'rgba(255, 0, 0, 0.85)';
+                    div.onclick  = function() {move_to(id,element);};
+                }
+                else if(id[1]!=(div.id)[1])
+                {
+                    div.style.backgroundColor = 'rgba(255, 0, 0, 0.85)';
+                    div.onclick  = function() {move_to(id,element);};
+                }
+                
             }
+            
         }
         else if(flag == false)  {
             div.style.backgroundColor = 'rgba(0, 128, 0, 0.90)'
@@ -103,10 +133,9 @@ function draw(array,idm,id)
     });
 }
 
-function draw_s(array,idm)
+function draw_s(array,idm,id)
 {
     let clr = idm[0];
-    console.log(clr);
     let flag = false;
     array.forEach(element => {
         let div = document.getElementById(element);
@@ -117,10 +146,12 @@ function draw_s(array,idm)
             if(cclr != clr)
             {
                 div.style.backgroundColor = 'rgba(255, 0, 0, 0.85)';
+                div.onclick  = function() {move_to(id,element);};
             }
         }
         else if(flag == false)  {
             div.style.backgroundColor = 'rgba(0, 128, 0, 0.90)'
+            div.onclick  = function() {move_to(id,element);};
         }
     });
 }
@@ -297,7 +328,7 @@ function visl_rook(id) {
 
 }
 
-function visl_king(id) //! changed by nisarg
+function visl_king(id) 
 {
     let row=parseInt(id[0]);
     let col=parseInt(id[1]);
@@ -386,7 +417,7 @@ function visl_king(id) //! changed by nisarg
     else
     {
         ele.classList.add('clicked');
-        draw_s(movement,idm);
+        draw_s(movement,idm,id);
     }
 }
 
@@ -499,6 +530,7 @@ function visl_pawn(id,color)
     
     let row = parseInt(id[0]);
     let col = parseInt(id[1]);
+
     if(row==1 && color=='B')
     {
         row++;
@@ -526,18 +558,41 @@ function visl_pawn(id,color)
             movement.push('' + row + col);
         }
     }
+    row=parseInt(id[0]);
+    let cross=[];
+    if(color=='B') row++;
+    else row--;
+    if(col>0)
+    {
+        col--;
+        cross.push('' + row + col);
+        col++;
+    }
+    if(col<7)
+    {
+        col++;
+        cross.push('' + row + col);
+        col--;
+    }
 
     let div=document.getElementById(id);
     let idm = div.querySelector('img').id;
+
+    cross=modify(cross,idm,id);
+
     if(div.classList.contains('clicked'))
     {
         div.classList.remove('clicked');
         undraw(movement);
+        undraw(cross);
     }
     else
     {
         div.classList.add('clicked')
         draw(movement,idm,id);
+        draw(cross,idm,id);
+        console.log(movement);
+        console.log(cross);
     }
 }
 
@@ -564,7 +619,7 @@ function visl_knight(id) {
     else
     {
         div.classList.add('clicked');
-        draw_s(array,idm);
+        draw_s(array,idm,id);
     }
 }
 
@@ -577,21 +632,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let Wknight1=document.getElementById('Wknight1');
     let Wknight2=document.getElementById('Wknight2');
 
-    Bknight1.parentNode.addEventListener('click',()=>{
-        visl_knight(Bknight1.parentElement.id);
-    })
-    
-    Bknight2.parentNode.addEventListener('click',()=>{
-        visl_knight(Bknight2.parentElement.id);
-    })
+    Bknight1.parentNode.onclick = function() {visl_knight(Bknight1.parentElement.id);};
+    Bknight2.parentNode.onclick = function() {visl_knight(Bknight2.parentElement.id);};
 
-    Wknight1.parentNode.addEventListener('click',()=>{
-        visl_knight(Wknight1.parentElement.id);
-    })
-
-    Wknight2.parentNode.addEventListener('click',()=>{
-        visl_knight(Wknight2.parentElement.id);
-    })
+    Wknight1.parentNode.onclick = function() {visl_knight(Wknight1.parentElement.id);};
+    Wknight2.parentNode.onclick = function() {visl_knight(Wknight2.parentElement.id);};
 
     let Bbishop1 = document.getElementById('Bbishop1');
     let Bbishop2 = document.getElementById('Bbishop2')
@@ -599,50 +644,30 @@ document.addEventListener('DOMContentLoaded', () => {
     let Wbishop2 = document.getElementById('Wbishop2')
 
     Bbishop1.parentNode.onclick = function() {visl_biop(Bbishop1.parentElement.id);};
-    Bbishop2.parentNode.addEventListener('click', ()=>{
-        visl_biop(Bbishop2.parentElement.id);
-    });
-    Wbishop1.parentNode.addEventListener('click', ()=>{
-        visl_biop(Wbishop1.parentElement.id);
-    });
-    Wbishop2.parentNode.addEventListener('click', ()=>{
-        visl_biop(Wbishop2.parentElement.id);
-    });
+    Bbishop2.parentNode.onclick = function() {visl_biop(Bbishop2.parentElement.id);};
+    Wbishop1.parentNode.onclick = function() {visl_biop(Wbishop1.parentElement.id);};
+    Wbishop2.parentNode.onclick = function() {visl_biop(Wbishop2.parentElement.id);};
 
     let Brook1 = document.getElementById('Brook1');
     let Brook2 = document.getElementById('Brook2');
     let Wrook1 = document.getElementById('Wrook1');
     let Wrook2 = document.getElementById('Wrook2');
     
-    Brook1.parentNode.addEventListener('click',()=>{
-        visl_rook(Brook1.parentElement.id);
-    })
-    Brook2.parentNode.addEventListener('click',()=>{
-        visl_rook(Brook2.parentElement.id);
-    })
+    Brook1.parentNode.onclick = function() {visl_rook(Brook1.parentElement.id);};
+    Brook2.parentNode.onclick = function() {visl_rook(Brook2.parentElement.id);};
     Wrook1.parentNode.onclick = function() {visl_rook(Wrook1.parentElement.id);};
-    Wrook2.parentNode.addEventListener('click',()=>{
-        visl_rook(Wrook2.parentElement.id);
-    })
+    Wrook2.parentNode.onclick = function() {visl_rook(Wrook2.parentElement.id);};
 
     let Bking = document.getElementById('Bking');
     let Wking = document.getElementById('Wking');
 
-    Bking.parentNode.addEventListener('click' ,()=>{
-        visl_king(Bking.parentElement.id);
-    })
-
-    Wking.parentNode.addEventListener('click', ()=>{
-        visl_king(Wking.parentElement.id);
-    })
+    Bking.parentNode.onclick = function() {visl_king(Bking.parentElement.id);};
+    Wking.parentNode.onclick = function() {visl_king(Wking.parentElement.id);};
 
     let Bqueen = document.getElementById('Bqueen');
     let Wqueen = document.getElementById('Wqueen');
-    
-    Bqueen.parentNode.addEventListener('click', ()=>{
-        visl_queen(Bqueen.parentNode.id);
-    })
 
+    Bqueen.parentNode.onclick = function() {visl_queen(Bqueen.parentElement.id);};
     Wqueen.parentNode.onclick = function() {visl_queen(Wqueen.parentElement.id);};
 
     let Bpawn1=document.getElementById('Bpawn1');
@@ -663,52 +688,22 @@ document.addEventListener('DOMContentLoaded', () => {
     let Wpawn7=document.getElementById('Wpawn7');
     let Wpawn8=document.getElementById('Wpawn8');
 
-    Bpawn1.parentNode.addEventListener('click',()=>{
-        visl_pawn(Bpawn1.parentNode.id,'B');
-    })
-    Bpawn2.parentNode.addEventListener('click',()=>{
-        visl_pawn(Bpawn2.parentNode.id,'B');
-    })
-    Bpawn3.parentNode.addEventListener('click',()=>{
-        visl_pawn(Bpawn3.parentNode.id,'B');
-    })
-    Bpawn4.parentNode.addEventListener('click',()=>{
-        visl_pawn(Bpawn4.parentNode.id,'B');
-    })
-    Bpawn5.parentNode.addEventListener('click',()=>{
-        visl_pawn(Bpawn5.parentNode.id,'B');
-    })
-    Bpawn6.parentNode.addEventListener('click',()=>{
-        visl_pawn(Bpawn6.parentNode.id,'B');
-    })
-    Bpawn7.parentNode.addEventListener('click',()=>{
-        visl_pawn(Bpawn7.parentNode.id,'B');
-    })
-    Bpawn8.parentNode.addEventListener('click',()=>{
-        visl_pawn(Bpawn8.parentNode.id,'B');
-    })
+    Bpawn1.parentNode.onclick = function() {visl_pawn(Bpawn1.parentElement.id,'B');};
+    Bpawn2.parentNode.onclick = function() {visl_pawn(Bpawn2.parentElement.id,'B');};
+    Bpawn3.parentNode.onclick = function() {visl_pawn(Bpawn3.parentElement.id,'B');};
+    Bpawn4.parentNode.onclick = function() {visl_pawn(Bpawn4.parentElement.id,'B');};
+    Bpawn5.parentNode.onclick = function() {visl_pawn(Bpawn5.parentElement.id,'B');};
+    Bpawn6.parentNode.onclick = function() {visl_pawn(Bpawn6.parentElement.id,'B');};
+    Bpawn7.parentNode.onclick = function() {visl_pawn(Bpawn7.parentElement.id,'B');};
+    Bpawn8.parentNode.onclick = function() {visl_pawn(Bpawn8.parentElement.id,'B');};
 
-    Wpawn1.parentNode.addEventListener('click',()=>{
-        visl_pawn(Wpawn1.parentNode.id,'W');
-    })
-    Wpawn2.parentNode.addEventListener('click',()=>{
-        visl_pawn(Wpawn2.parentNode.id,'W');
-    })
-    Wpawn3.parentNode.addEventListener('click',()=>{
-        visl_pawn(Wpawn3.parentNode.id,'W');
-    })
-    Wpawn4.parentNode.addEventListener('click',()=>{
-        visl_pawn(Wpawn4.parentNode.id,'W');
-    })
-    Wpawn5.parentNode.addEventListener('click',()=>{
-        visl_pawn(Wpawn5.parentNode.id,'W');
-    })
+    Wpawn1.parentNode.onclick = function() {visl_pawn(Wpawn1.parentElement.id,'W');};
+    Wpawn2.parentNode.onclick = function() {visl_pawn(Wpawn2.parentElement.id,'W');};
+    Wpawn3.parentNode.onclick = function() {visl_pawn(Wpawn3.parentElement.id,'W');};
+    Wpawn4.parentNode.onclick = function() {visl_pawn(Wpawn4.parentElement.id,'W');};
+    Wpawn5.parentNode.onclick = function() {visl_pawn(Wpawn5.parentElement.id,'W');};
     Wpawn6.parentNode.onclick = function() {visl_pawn(Wpawn6.parentElement.id,'W');};
-    Wpawn7.parentNode.addEventListener('click',()=>{
-        visl_pawn(Wpawn7.parentNode.id,'W');
-    })
-    Wpawn8.parentNode.addEventListener('click',()=>{
-        visl_pawn(Wpawn8.parentNode.id,'W');
-    })
+    Wpawn7.parentNode.onclick = function() {visl_pawn(Wpawn7.parentElement.id,'W');};
+    Wpawn8.parentNode.onclick = function() {visl_pawn(Wpawn8.parentElement.id,'W');};
 
 });
