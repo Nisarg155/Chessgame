@@ -112,8 +112,8 @@ function draw(array,idm,id)
                 flag = true;
             }
             else if(clr != cclr && flag == false)  {
+                flag = true;
                 if(name!='pawn'){
-                    flag = true;
                     div.style.backgroundColor = 'rgba(255, 0, 0, 0.85)';
                     div.onclick  = function() {move_to(id,element);};
                 }
