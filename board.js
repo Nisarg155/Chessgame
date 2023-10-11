@@ -166,7 +166,15 @@ function undraw(array)
         li.onclick = null;
         else{
             let piece = (li.querySelector('img').id);
-            let name = piece.slice(1,piece.length - 1);
+            let len = piece.length;
+            let name = null;
+            if( !isNaN(piece[len - 1]) )
+            {
+                name = (piece).slice(1,len - 1);
+            }
+            else{
+                name = (piece).slice(1);
+            }
             switch(name)
             {
                 case 'bishop':
