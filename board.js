@@ -1,10 +1,191 @@
-function move_to(id1,id2)
+let wpieces = ['Wpawn1','Wpawn2','Wpawn3','Wpawn4','Wpawn5','Wpawn6','Wpawn7','Wpawn8','Wrook1','Wknight1','Wbishop1','Wqueen','Wking','Wbishop2','Wknight2','Wrook2'];
+let bpieces = ['Bpawn1','Bpawn2','Bpawn3','Bpawn4','Bpawn5','Bpawn6','Bpawn7','Bpawn8','Brook1','Bknight1','Bbishop1','Bqueen','Bking','Bbishop2','Bknight2','Brook2'];
+
+function collision(array)
+{
+    let arr = [];
+    let flag = false;
+    for(let i = 0;i<array.length ;i++)
+    {
+        let li = document.getElementById(array[i]);
+        let img = li.querySelector('img');
+        if(!img && flag == false){
+            arr.push(array[i]);
+        }
+        else{
+            flag = true;
+        }
+    }
+    return arr;
+}
+
+function kk_check(array)
+{
+    let arr = [];
+
+    array.forEach(element => {
+        let li = document.getElementById(element);
+        let img = li.querySelector('img');
+        if(img == null) arr.push(element);
+    });
+
+    return arr;
+}
+
+function check(id,king_img)
+{
+    let clr = (king_img.id)[0];
+    let pieces_arr = [];
+    let len ;
+    if(clr == 'W')
+    {
+        pieces_arr = bpieces;
+        len = pieces_arr.length;
+    }
+    else if(clr == 'B'){
+        pieces_arr = wpieces;
+        len = pieces_arr.length;
+    }
+    for(let i = 0;i < len;i++)
+    {
+        let piece = pieces_arr[i];
+        let piece_img = document.getElementById(piece);
+        let parent_id = piece_img.parentElement.id;
+        if(!isNaN((piece_img.id)[piece_img.id.length - 1]))
+        {
+            piece = (piece_img.id).slice(1,piece_img.id.length - 1);
+        }
+        else{
+            piece = (piece_img.id).slice(1);
+        }
+        let arr ;
+        switch(piece)
+        {
+            case 'bishop':
+                arr = visl_biop(parent_id,true);
+                if(arr.includes(id)) 
+                {
+                    console.log('collision in bishop');
+                    return true;
+                }
+                break;
+            case 'rook':
+                arr = visl_rook(parent_id,true);
+                if(arr.includes(id)) 
+                {
+                    console.log('collision in rook');
+                    return true;
+                }
+                break;
+            case 'king':
+                arr = visl_king(parent_id,true);
+                if(arr.includes(id)) 
+                {
+                    console.log('collision in king');
+                    return true;
+                }
+                break;
+            case 'queen':
+                arr = visl_queen(parent_id,true);
+                if(arr.includes(id)) 
+                {
+                    console.log(id,piece_img);
+                    console.log('collision in queen');
+                    return true;
+                }
+                break;
+            case 'pawn':
+                arr = visl_pawn(parent_id,piece_img.id[0],true);
+                if(arr.includes(id)) 
+                {
+                    console.log('collision in pawn');
+                    return true;
+                }
+                break;
+            case 'knight':
+                arr = visl_knight(parent_id,true);
+                if(arr.includes(id)) 
+                {
+                    console.log('collision in knight');
+                    return true;
+                }
+                break;
+        }
+    }
+        
+    
+}
+
+
+function short_castling(img,id)
+{
+    let king_img = img;
+    for(let i = parseInt(id[1]) + 1;i <= parseInt(id[1]) + 2;i++) //* if there is any piece between king and rook
+    {
+        
+        if(document.getElementById(id[0] + i).querySelector('img') != null) return false;
+    }
+    let div = document.getElementById(id[0] + '7');
+    if(div.querySelector('img') == null) return false; //* if there is no image at the given position of rook
+    let img1 = div.querySelector('img');
+    if( isNaN((img1.id)[img1.id.length - 1]) ) return false; //* if the piece is king or queen
+    let piece = (img1.id).slice(0,img1.id.length - 1); //* to slice the number from the piece
+    if(piece[0] != img.id[0]) return  false; //* if the piece not of same color
+    if(piece.slice(1) != 'rook') return false; //* if the piece is not rook
+    for(let i = parseInt(id[1]) + 1; i <= parseInt(id[1]) + 2;i++) //* if the king is in check
+    {
+        if(check(id[0] + i,king_img)) return false;
+    }
+
+
+    return true;
+}
+
+function long_castling(img,id)
+{
+    let king_img = img;
+    for(let i = parseInt(id[1]) - 1;i >= parseInt(id[1]) - 2;i--) //* if there is any piece between king and rook
+    {
+        if(document.getElementById(id[0] + i).querySelector('img') != null) return false;
+    }
+    let div = document.getElementById(id[0] + '0');
+    if(div.querySelector('img') == null) return false; //* if there is no image at the given position of rook
+    let img1 = div.querySelector('img');
+    if( isNaN((img1.id)[img1.id.length - 1]) ) return false; //* if the piece is king or queen
+    let piece = (img1.id).slice(0,img1.id.length - 1); //* to slice the number from the piece
+    if(piece[0] != img.id[0]) return  false; //* if the piece not of same color
+    if(piece.slice(1) != 'rook') return false; //* if the piece is not rook
+    for(let i = parseInt(id[1]) - 1; i >= parseInt(id[1]) - 2;i--) //* if the king is in check
+    {
+        if(check(id[0] + i,king_img)) return false;
+    }
+
+    return true;
+}
+
+
+function castling(id)
+{
+    let li = document.getElementById(id);
+    let img = li.querySelector('img');
+    let ele_id = document.getElementById(id[0] + '7');
+    let ele_img = ele_id.querySelector('img'); 
+    if(img.classList.contains('moved') || ele_img.classList.contains('moved'))
+    {
+        return [false,false];
+    } 
+    let sc =  short_castling(img,id);
+    let lc = long_castling(img,id);
+
+    return [sc,lc];
+}
+
+
+function move_to(id1,id2,cstl = false)
 {
     let d1 = document.getElementById(id1);
     let d2 = document.getElementById(id2);
     let img = d1.querySelector('img');
-    // visl_biop(id1);
-    // d1.removeChild(img);
     let length = img.id.length;
     let p1 ;
     if( !isNaN(img.id[length - 1]) )
@@ -21,6 +202,7 @@ function move_to(id1,id2)
             d1.removeChild(img);
             break;
         case 'rook':
+            if(cstl == false)  
             visl_rook(id1);
             d1.removeChild(img);
             break;
@@ -45,23 +227,40 @@ function move_to(id1,id2)
     if(p2)
     {
         d2.onclick = null;
+        
+        let child = p2.id;
+        if(child[0] == 'W')
+        {
+            if(wpieces.includes(child))
+            {
+                wpieces.splice(wpieces.indexOf(child),1);
+            }
+        }
+        else if(child[0] == 'B')
+        {
+            if(bpieces.includes(child))
+            {
+                bpieces.splice(bpieces.indexOf(child),1);
+            }
+        }
         d2.removeChild(p2);
     }
     d2.appendChild(img);
     d2.classList.remove('clicked');
     d1.onclick = null;
     d2.classList.remove('clicked');
-    console.log(p1);
     switch(p1)
     {
         case 'bishop':
             d2.onclick = function() {visl_biop(id2);};
             break;
         case 'rook':
+            img.classList.add('moved');
             d2.onclick = function() {visl_rook(id2);};
             break;
         case 'king':
             d2.onclick = null;
+            img.classList.add('moved');
             d2.onclick = function() {visl_king(id2);};
             break;
         case 'queen':
@@ -133,7 +332,7 @@ function draw(array,idm,id)
     });
 }
 
-function draw_s(array,idm,id)
+function draw_s(array,idm,id,result = [false,false])
 {
     let clr = idm[0];
     let flag = false;
@@ -154,9 +353,28 @@ function draw_s(array,idm,id)
             div.onclick  = function() {move_to(id,element);};
         }
     });
+
+    if(result[0] == true)
+    {
+        let king_div  = document.getElementById(id[0] + '6');
+        king_div.style.backgroundColor = 'purple'
+        king_div.onclick  = function() {
+            move_to(id,id[0] + '6',true);
+            move_to(id[0] + '7',id[0] + '5',true);
+    };
+    }
+    if(result[1] == true)
+    {
+        let king_div  = document.getElementById(id[0] + '2');
+        king_div.style.backgroundColor = 'purple'
+        king_div.onclick  = function() {
+            move_to(id,id[0] + '2',true);
+            move_to(id[0] + '0',id[0] + '3',true);
+    };
+    }
 }
 
-function undraw(array)
+function undraw(array,id = null) 
 {
     array.forEach(element => {
         let li = document.getElementById(element);
@@ -207,9 +425,31 @@ function undraw(array)
             else li.style.backgroundColor = '#7c330c';
         }
     });
+
+    
+
+    
+        if(id == null) return;
+        row = parseInt(id[0]);
+        col = [2,6];
+
+        col.forEach(element => {
+            let li = document.getElementById(row + '' + element);
+            if(element %2 == 0)
+            {
+                if(row%2 == 0) li.style.backgroundColor = '#7c330c';
+                else li.style.backgroundColor = '#ddb180';
+            }
+            else{
+                if(row%2 == 0) li.style.backgroundColor = '#ddb180';
+                else li.style.backgroundColor = '#7c330c';
+            }
+        });
+
+
 }
 
-function visl_biop(id) {
+function visl_biop(id,ck = false) {
     let top_left = [];
     let top_right = [];
     let bottom_left = [];
@@ -243,6 +483,16 @@ function visl_biop(id) {
         bottom_right.push('' + row + col);
     }
 
+    if(ck == true)
+    {
+        let arr = [];
+        arr = arr.concat(collision(top_left));
+        arr = arr.concat(collision(bottom_left));
+        arr = arr.concat(collision(bottom_right));
+        arr = arr.concat(collision(top_right));
+    return arr;
+    }
+
     row = parseInt(id[0]);
     col = parseInt(id[1]);
 
@@ -273,7 +523,7 @@ function visl_biop(id) {
     }
 }
 
-function visl_rook(id) {
+function visl_rook(id,ck = false) {
     let front = [];
     let back = [];
     let right = [];
@@ -315,6 +565,17 @@ function visl_rook(id) {
         right.push('' + row + col);
     }
 
+    
+    if(ck == true)
+    {
+        let arr = [];
+        arr = arr.concat(collision(front));
+        arr = arr.concat(collision(back));
+        arr = arr.concat(collision(right));
+        arr = arr.concat(collision(left));        
+    return arr;
+    }
+
     let div=document.getElementById(id);
     let idm = div.querySelector('img').id;
     if(div.classList.contains('clicked'))
@@ -336,7 +597,7 @@ function visl_rook(id) {
 
 }
 
-function visl_king(id) 
+function visl_king(id,ck = false,cstl = false) 
 {
     let row=parseInt(id[0]);
     let col=parseInt(id[1]);
@@ -415,21 +676,29 @@ function visl_king(id)
         col++;
         movement.push('' + row + col);
     }
+    if(ck == true)
+    {
+
+        return kk_check(movement);
+    }
     let ele = document.getElementById(id);
     let idm=ele.querySelector('img').id;
     if(ele.classList.contains('clicked'))
     {
         ele.classList.remove('clicked');
-        undraw(movement);
+        undraw(movement,id);
+
     }
     else
     {
+        let result = castling(id);
         ele.classList.add('clicked');
-        draw_s(movement,idm,id);
+        draw_s(movement,idm,id,result);
     }
+    
 }
 
-function visl_queen(id){
+function visl_queen(id , ck = false){
     // visl_biop(id);
     // visl_rook(id);
     let top_left = [];
@@ -515,6 +784,20 @@ function visl_queen(id){
         right.push('' + row + col);
     }
 
+    if(ck == true)
+    {
+        let arr = [];
+        arr = arr.concat(collision(top_left));
+        arr = arr.concat(collision(bottom_left));
+        arr = arr.concat(collision(bottom_right));
+        arr = arr.concat(collision(top_right));
+        arr = arr.concat(collision(front));
+        arr = arr.concat(collision(back));
+        arr = arr.concat(collision(right));
+        arr = arr.concat(collision(left));
+        return arr;
+    }
+
     let div=document.getElementById(id);
     let idm = div.querySelector('img').id;
     if(div.classList.contains('clicked'))
@@ -532,7 +815,7 @@ function visl_queen(id){
     }
 }
 
-function visl_pawn(id,color)
+function visl_pawn(id,color,ck = false)
 {
     let movement = [];
     
@@ -583,6 +866,12 @@ function visl_pawn(id,color)
         col--;
     }
 
+    if(ck == true)
+    {
+
+        return collision(movement);
+    }
+
     let div=document.getElementById(id);
     let idm = div.querySelector('img').id;
 
@@ -599,12 +888,10 @@ function visl_pawn(id,color)
         div.classList.add('clicked')
         draw(movement,idm,id);
         draw(cross,idm,id);
-        console.log(movement);
-        console.log(cross);
     }
 }
 
-function visl_knight(id) {
+function visl_knight(id,ck = false) {
     let delrc = [[-1,-2],[-2,-1],[-2,1],[-1,2],[1,2],[2,1],[2,-1],[1,-2]];
     let array = [];    
     delrc.forEach(element =>{
@@ -616,7 +903,12 @@ function visl_knight(id) {
         {
             array.push('' + delr + delc);
         }
-    });    
+    });  
+    if(ck == true)
+    {
+
+        return kk_check(array);
+    }
     let div=document.getElementById(id);
     let idm = div.querySelector('img').id;
     if(div.classList.contains('clicked'))
