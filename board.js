@@ -420,6 +420,8 @@ function draw_s(array,idm,id,result = [false,false])
         king_div.onclick  = function() {
             move_to(id,id[0] + '6',true);
             move_to(id[0] + '7',id[0] + '5',true);
+            if(moves=='W') moves='B'; //change
+            else moves='W';
     };
     }
     if(result[1] == true)
@@ -429,6 +431,8 @@ function draw_s(array,idm,id,result = [false,false])
         king_div.onclick  = function() {
             move_to(id,id[0] + '2',true);
             move_to(id[0] + '0',id[0] + '3',true);
+            if(moves=='W') moves='B'; //change
+            else moves='W';
     };
     }
 }
@@ -951,7 +955,7 @@ function visl_pawn(id,color,ck = false)
         return arr;
     }
 
-  
+
     if(idm[0]!=moves) return;
 
     cross=modify(cross,idm,id);
