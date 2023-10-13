@@ -11,34 +11,67 @@ let board=['00','10','20','30','40','50','60','70', //change
            '07','17','27','37','47','57','67','77' //change
 ];
 let moves='W';
-function collision(array)
+function checkmate(id)
+{
+    return check(id,document.getElementById(id).querySelector('img'));
+}
+function collision(array,idm,id)
 {
     let arr = [];
+    let clr = idm[0];
+    let name=idm.slice(1,idm.length-1);
     let flag = false;
-    for(let i = 0;i<array.length ;i++)
-    {
-        let li = document.getElementById(array[i]);
-        let img = li.querySelector('img');
-        if(!img && flag == false){
-            arr.push(array[i]);
+    array.forEach(element => {
+        let div = document.getElementById(element);
+        let cid = div.querySelector('img');
+        if(cid)
+        {
+            let cclr = (cid.id)[0];
+            if(cclr == clr)
+            {
+                flag = true;
+            }
+            else if(clr != cclr && flag == false)  {
+                if(name!='pawn'){
+                    flag = true;
+                    arr.push(element);
+                }
+                else if(id[1]!=(div.id)[1])
+                {
+                    arr.push(element);
+                }
+                
+            }
+            
         }
-        else{
-            flag = true;
+        else if(flag == false)  {
+            arr.push(element);
         }
-    }
+    });
+
     return arr;
 }
 
-function kk_check(array)
+function kk_check(array,idm)
 {
     let arr = [];
-
+    let clr = idm[0];
+    let flag = false;
     array.forEach(element => {
-        let li = document.getElementById(element);
-        let img = li.querySelector('img');
-        if(img == null) arr.push(element);
+        let div = document.getElementById(element);
+        let cid = div.querySelector('img');
+        if(cid)
+        {
+            let cclr = (cid.id)[0];
+            if(cclr != clr)
+            {
+                arr.push(element);
+            }
+        }
+        else if(flag == false)  {
+            arr.push(element);
+        }
     });
-
     return arr;
 }
 
@@ -142,10 +175,14 @@ function short_castling(img,id)
     let piece = (img1.id).slice(0,img1.id.length - 1); //* to slice the number from the piece
     if(piece[0] != img.id[0]) return  false; //* if the piece not of same color
     if(piece.slice(1) != 'rook') return false; //* if the piece is not rook
-    for(let i = parseInt(id[1]) + 1; i <= parseInt(id[1]) + 2;i++) //* if the king is in check
-    {
-        if(check(id[0] + i,king_img)) return false;
-    }
+    for(let i = parseInt(id[1]) + 1;i <= parseInt(id[1]) + 2;i++){ //* if there is any piece between king and rook
+        if(check(id[0] + i,king_img)) return false; //* check if there is king future position is in check 
+    } 
+    if(checkmate(id))
+        {
+            return false;
+        }
+
 
 
     return true;
@@ -165,10 +202,16 @@ function long_castling(img,id)
     let piece = (img1.id).slice(0,img1.id.length - 1); //* to slice the number from the piece
     if(piece[0] != img.id[0]) return  false; //* if the piece not of same color
     if(piece.slice(1) != 'rook') return false; //* if the piece is not rook
-    for(let i = parseInt(id[1]) - 1; i >= parseInt(id[1]) - 2;i--) //* if the king is in check
-    {
-        if(check(id[0] + i,king_img)) return false;
+    for(let i = parseInt(id[1]) - 1;i >= parseInt(id[1]) - 2;i--){ //* if there is any piece between king and rook
+        if(check(id[0] + '2',king_img)) return false;
     }
+        if(checkmate(id))
+        {
+            return false;
+        }
+
+
+        
 
     return true;
 }
@@ -500,15 +543,7 @@ function visl_biop(id,ck = false) {
         bottom_right.push('' + row + col);
     }
     
-    if(ck == true)
-    {
-        let arr = [];
-        arr = arr.concat(collision(top_left));
-        arr = arr.concat(collision(bottom_left));
-        arr = arr.concat(collision(bottom_right));
-        arr = arr.concat(collision(top_right));
-        return arr;
-    }
+
     
     row = parseInt(id[0]);
     col = parseInt(id[1]);
@@ -522,7 +557,19 @@ function visl_biop(id,ck = false) {
     
     let ele = document.getElementById(id);
     let idm = ele.querySelector('img').id;
+
+    if(ck == true)
+    {
+        let arr = [];
+        arr = arr.concat(collision(top_left,idm,id));
+        arr = arr.concat(collision(bottom_left,idm,id));
+        arr = arr.concat(collision(bottom_right,idm,id));
+        arr = arr.concat(collision(top_right,idm,id));
+        return arr;
+    }
+
     if(idm[0]!=moves) return;
+
     
     if(ele.classList.contains('clicked'))
     {
@@ -584,19 +631,19 @@ function visl_rook(id,ck = false) {
         right.push('' + row + col);
     }
     
-    
+    let div=document.getElementById(id);
+    let idm = div.querySelector('img').id;
     if(ck == true)
     {
         let arr = [];
-        arr = arr.concat(collision(front));
-        arr = arr.concat(collision(back));
-        arr = arr.concat(collision(right));
-        arr = arr.concat(collision(left));        
+        arr = arr.concat(collision(front,idm,id));
+        arr = arr.concat(collision(back,idm,id));
+        arr = arr.concat(collision(right,idm,id));
+        arr = arr.concat(collision(left,idm,id));        
         return arr;
     }
 
-    let div=document.getElementById(id);
-    let idm = div.querySelector('img').id;
+  
     if(idm[0]!=moves) return;
     if(div.classList.contains('clicked'))
     {
@@ -697,13 +744,14 @@ function visl_king(id,ck = false,cstl = false)
         col++;
         movement.push('' + row + col);
     }
+    let ele = document.getElementById(id);
+    let idm=ele.querySelector('img').id;
     if(ck == true)
     {
 
-        return kk_check(movement);
+        return kk_check(movement,idm);
     }
-    let ele = document.getElementById(id);
-    let idm=ele.querySelector('img').id;
+    
     if(idm[0]!=moves) return;
     if(ele.classList.contains('clicked'))
     {
@@ -806,23 +854,24 @@ function visl_queen(id , ck = false){
         col++;
         right.push('' + row + col);
     }
+    
+    let div=document.getElementById(id);
+    let idm = div.querySelector('img').id;
 
     if(ck == true)
     {
         let arr = [];
-        arr = arr.concat(collision(top_left));
-        arr = arr.concat(collision(bottom_left));
-        arr = arr.concat(collision(bottom_right));
-        arr = arr.concat(collision(top_right));
-        arr = arr.concat(collision(front));
-        arr = arr.concat(collision(back));
-        arr = arr.concat(collision(right));
-        arr = arr.concat(collision(left));
+        arr = arr.concat(collision(top_left,idm,id));
+        arr = arr.concat(collision(bottom_left,idm,id));
+        arr = arr.concat(collision(bottom_right,idm,id));
+        arr = arr.concat(collision(top_right,idm,id));
+        arr = arr.concat(collision(front,idm,id));
+        arr = arr.concat(collision(back,idm,id));
+        arr = arr.concat(collision(right,idm,id));
+        arr = arr.concat(collision(left,idm,id));
         return arr;
     }
 
-    let div=document.getElementById(id);
-    let idm = div.querySelector('img').id;
 
     if(idm[0]!=moves) return; //change
     if(div.classList.contains('clicked'))
@@ -892,14 +941,17 @@ function visl_pawn(id,color,ck = false)
         col--;
     }
 
-    if(ck == true)
-    {
-
-        return collision(movement);
-    }
-
     let div=document.getElementById(id);
     let idm = div.querySelector('img').id;
+
+    if(ck == true)
+    {
+        let arr = [];
+        arr = arr.concat(collision(cross,idm,id));
+        return arr;
+    }
+
+  
     if(idm[0]!=moves) return;
 
     cross=modify(cross,idm,id);
@@ -931,14 +983,15 @@ function visl_knight(id,ck = false) {
         {
             array.push('' + delr + delc);
         }
-    });  
+    });
+    let div=document.getElementById(id);
+    let idm = div.querySelector('img').id;
     if(ck == true)
     {
 
-        return kk_check(array);
+        return kk_check(array,idm);
     }
-    let div=document.getElementById(id);
-    let idm = div.querySelector('img').id;
+
     if(idm[0]!=moves) return;
     if(div.classList.contains('clicked'))
     {
