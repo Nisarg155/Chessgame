@@ -1,6 +1,16 @@
 let wpieces = ['Wpawn1','Wpawn2','Wpawn3','Wpawn4','Wpawn5','Wpawn6','Wpawn7','Wpawn8','Wrook1','Wknight1','Wbishop1','Wqueen','Wking','Wbishop2','Wknight2','Wrook2'];
 let bpieces = ['Bpawn1','Bpawn2','Bpawn3','Bpawn4','Bpawn5','Bpawn6','Bpawn7','Bpawn8','Brook1','Bknight1','Bbishop1','Bqueen','Bking','Bbishop2','Bknight2','Brook2'];
 
+let board=['00','10','20','30','40','50','60','70', //change
+           '01','11','21','31','41','51','61','71', //change
+           '02','12','22','32','42','52','62','72', //change 
+           '03','13','23','33','43','53','63','73', //change
+           '04','14','24','34','44','54','64','74', //change
+           '05','15','25','35','45','55','65','75', //change
+           '06','16','26','36','46','56','66','76', //change
+           '07','17','27','37','47','57','67','77' //change
+];
+let moves='W';
 function collision(array)
 {
     let arr = [];
@@ -183,6 +193,10 @@ function castling(id)
 
 function move_to(id1,id2,cstl = false)
 {
+    undraw(board); //change
+    if(moves=='W') moves='B'; //change
+    else moves='W'; //change
+
     let d1 = document.getElementById(id1);
     let d2 = document.getElementById(id2);
     let img = d1.querySelector('img');
@@ -297,6 +311,7 @@ function modify(cross,idm,id)
 
 function draw(array,idm,id)
 {
+    if(moves!=idm[0]) return;
     let clr = idm[0];
     let name=idm.slice(1,idm.length-1);
     let flag = false;
@@ -311,8 +326,8 @@ function draw(array,idm,id)
                 flag = true;
             }
             else if(clr != cclr && flag == false)  {
-                flag = true;
                 if(name!='pawn'){
+                    flag = true;
                     div.style.backgroundColor = 'rgba(255, 0, 0, 0.85)';
                     div.onclick  = function() {move_to(id,element);};
                 }
@@ -334,6 +349,7 @@ function draw(array,idm,id)
 
 function draw_s(array,idm,id,result = [false,false])
 {
+    if(moves!=idm[0]) return;
     let clr = idm[0];
     let flag = false;
     array.forEach(element => {
@@ -458,6 +474,7 @@ function visl_biop(id,ck = false) {
     let l = parseInt(id[0]);
     let r = parseInt(id[1]);
 
+    
     while (l >0  && r >0 && l <= 7 && r <= 7) {
         l--;
         r--;
@@ -473,16 +490,16 @@ function visl_biop(id,ck = false) {
         row++;
         bottom_left.push('' + row + col);
     }
-
+    
     row = parseInt(id[0]);
     col = parseInt(id[1]);
-
+    
     while(row>=0 && col>=0 && row<7 && col<7) {
         row++;
         col++;
         bottom_right.push('' + row + col);
     }
-
+    
     if(ck == true)
     {
         let arr = [];
@@ -490,22 +507,23 @@ function visl_biop(id,ck = false) {
         arr = arr.concat(collision(bottom_left));
         arr = arr.concat(collision(bottom_right));
         arr = arr.concat(collision(top_right));
-    return arr;
+        return arr;
     }
-
+    
     row = parseInt(id[0]);
     col = parseInt(id[1]);
-
+    
     while(row>0 && col<7 && row<=7 && col>=0)
     {
         col++;
         row--;
         top_right.push('' + row + col);
     }
-
+    
     let ele = document.getElementById(id);
     let idm = ele.querySelector('img').id;
-
+    if(idm[0]!=moves) return;
+    
     if(ele.classList.contains('clicked'))
     {
         ele.classList.remove('clicked');
@@ -516,6 +534,7 @@ function visl_biop(id,ck = false) {
     }
     else{
         ele.classList.add('clicked');
+        undraw(board); //change
     draw(top_left,idm,id);
     draw(top_right,idm,id);
     draw(bottom_right,idm,id);
@@ -528,7 +547,7 @@ function visl_rook(id,ck = false) {
     let back = [];
     let right = [];
     let left = [];
-
+    
     let row=parseInt(id[0]); 
     let col=parseInt(id[1]); 
 
@@ -537,19 +556,19 @@ function visl_rook(id,ck = false) {
         row--;
         front.push('' + row + col);
     }
-
+    
     row=parseInt(id[0]);
     col=parseInt(id[1]);
-
+    
     while(row>=0 && row<7 && col>=0 && col<=7)
     {
         row++;
         back.push('' + row + col);
     }
-
+    
     row=parseInt(id[0]);
     col=parseInt(id[1]);
-
+    
     while(row>=0 && row<=7 && col>0 && col<=7)
     {
         col--;
@@ -558,13 +577,13 @@ function visl_rook(id,ck = false) {
 
     row=parseInt(id[0]);
     col=parseInt(id[1]);
-
+    
     while(row>=0 && row<=7 && col>=0 && col<7)
     {
         col++;
         right.push('' + row + col);
     }
-
+    
     
     if(ck == true)
     {
@@ -573,11 +592,12 @@ function visl_rook(id,ck = false) {
         arr = arr.concat(collision(back));
         arr = arr.concat(collision(right));
         arr = arr.concat(collision(left));        
-    return arr;
+        return arr;
     }
 
     let div=document.getElementById(id);
     let idm = div.querySelector('img').id;
+    if(idm[0]!=moves) return;
     if(div.classList.contains('clicked'))
     {
         undraw(front);
@@ -588,13 +608,14 @@ function visl_rook(id,ck = false) {
     }
     else
     {
+        undraw(board);
         draw(front,idm,id);
         draw(back,idm,id);
         draw(right,idm,id);
         draw(left,idm,id);
         div.classList.add('clicked');
     }
-
+    
 }
 
 function visl_king(id,ck = false,cstl = false) 
@@ -683,6 +704,7 @@ function visl_king(id,ck = false,cstl = false)
     }
     let ele = document.getElementById(id);
     let idm=ele.querySelector('img').id;
+    if(idm[0]!=moves) return;
     if(ele.classList.contains('clicked'))
     {
         ele.classList.remove('clicked');
@@ -691,6 +713,7 @@ function visl_king(id,ck = false,cstl = false)
     }
     else
     {
+        undraw(board);
         let result = castling(id);
         ele.classList.add('clicked');
         draw_s(movement,idm,id,result);
@@ -800,6 +823,8 @@ function visl_queen(id , ck = false){
 
     let div=document.getElementById(id);
     let idm = div.querySelector('img').id;
+
+    if(idm[0]!=moves) return; //change
     if(div.classList.contains('clicked'))
     {
         div.classList.remove('clicked');
@@ -809,6 +834,7 @@ function visl_queen(id , ck = false){
     else
     {
         div.classList.add('clicked');
+        undraw(board); 
         draw(front,idm,id),
         draw(back,idm,id),draw(right,idm,id),draw(left,idm,id);
         draw(bottom_left,idm,id),draw(bottom_right,idm,id),draw(top_left,idm,id),draw(top_right,idm,id);
@@ -874,6 +900,7 @@ function visl_pawn(id,color,ck = false)
 
     let div=document.getElementById(id);
     let idm = div.querySelector('img').id;
+    if(idm[0]!=moves) return;
 
     cross=modify(cross,idm,id);
 
@@ -885,6 +912,7 @@ function visl_pawn(id,color,ck = false)
     }
     else
     {
+        undraw(board);
         div.classList.add('clicked')
         draw(movement,idm,id);
         draw(cross,idm,id);
@@ -911,6 +939,7 @@ function visl_knight(id,ck = false) {
     }
     let div=document.getElementById(id);
     let idm = div.querySelector('img').id;
+    if(idm[0]!=moves) return;
     if(div.classList.contains('clicked'))
     {
         div.classList.remove('clicked');
@@ -918,6 +947,7 @@ function visl_knight(id,ck = false) {
     }
     else
     {
+        undraw(board); 
         div.classList.add('clicked');
         draw_s(array,idm,id);
     }
