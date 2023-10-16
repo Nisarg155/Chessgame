@@ -1,6 +1,15 @@
 let wpieces = ['Wpawn1','Wpawn2','Wpawn3','Wpawn4','Wpawn5','Wpawn6','Wpawn7','Wpawn8','Wrook1','Wknight1','Wbishop1','Wqueen','Wking','Wbishop2','Wknight2','Wrook2'];
 let bpieces = ['Bpawn1','Bpawn2','Bpawn3','Bpawn4','Bpawn5','Bpawn6','Bpawn7','Bpawn8','Brook1','Bknight1','Bbishop1','Bqueen','Bking','Bbishop2','Bknight2','Brook2'];
 
+let B_no_of_queen=1;
+let W_no_of_queen=1;
+let B_no_of_rook=2;
+let W_no_of_rook=2;
+let B_no_of_knight=2;
+let W_no_of_knight=2;
+let B_no_of_bishop=2;
+let W_no_of_bishop=2;
+
 let board=['00','10','20','30','40','50','60','70', //change
            '01','11','21','31','41','51','61','71', //change
            '02','12','22','32','42','52','62','72', //change 
@@ -11,10 +20,80 @@ let board=['00','10','20','30','40','50','60','70', //change
            '07','17','27','37','47','57','67','77' //change
 ];
 let moves='W';
+
+function checkPawnPromotion(id) {
+    const row = id[0];
+    if (moves==='B' && row === '0') {
+        promotePawn(id, 'W', (result) => {
+            if (result === 1) {
+                // Handle the promotion result
+                console.log('Promotion successful White');
+                return 1;
+            }
+        });
+    } else if (moves==='W' && row === '7') {
+        promotePawn(id, 'B', (result) => {
+            if (result === 1) {
+                // Handle the promotion result
+                console.log('Promotion successful');
+                return 1;
+            }
+        });
+    }
+    return 0;
+}
+
+function promotePawn(id, color, callback) {
+    const promotionDialog = document.getElementById('promotion-popup');
+    promotionDialog.style.display = 'block';
+
+    // Define the event handler function
+    function handlePromotionClick(button) {
+        const newPiece = color + button.textContent;
+        let number;
+
+        if (button.textContent == 'bishop') {
+            if (color == 'B') { B_no_of_bishop += 1, number = B_no_of_bishop; }
+            else if (color == 'W') { W_no_of_bishop += 1, number = W_no_of_bishop; }
+        } else if (button.textContent == 'queen') {
+            if (color == 'B') { B_no_of_queen += 1, number = B_no_of_queen; }
+            else if (color == 'W') { W_no_of_queen += 1, number = W_no_of_queen; }
+        } else if (button.textContent == 'rook') {
+            if (color == 'B') { B_no_of_rook += 1, number = B_no_of_rook; }
+            else if (color == 'W') { W_no_of_rook += 1, number = W_no_of_rook; }
+        } else if (button.textContent == 'knight') {
+            if (color == 'B') { B_no_of_knight += 1, number = B_no_of_knight; }
+            else if (color == 'W') { W_no_of_knight += 1, number = W_no_of_knight; }
+        }
+
+        const new_id = newPiece + number;
+        console.log(button.textContent);
+        console.log(newPiece);
+        console.log(new_id);
+        document.getElementById(id).innerHTML = `<img id="${new_id}" src="photos/${newPiece}.png" style="width: 4.0625rem;">`;
+
+        // Call the callback function to indicate a successful promotion
+        callback(1);
+    }
+
+    // Add the event listener to each button outside the forEach loop
+    const buttons = promotionDialog.querySelectorAll('button');
+    buttons.forEach((button) => {
+        button.addEventListener('click', function clickHandler() {
+            handlePromotionClick(button);
+            buttons.forEach((button) => {
+                button.removeEventListener('click', clickHandler);
+            });
+            promotionDialog.style.display = 'none';
+        });
+    });
+}
+
 function checkmate(id)
 {
     return check(id,document.getElementById(id).querySelector('img'));
 }
+
 function collision(array,idm,id)
 {
     let arr = [];
@@ -325,8 +404,15 @@ function move_to(id1,id2,cstl = false)
             d2.onclick = function() {visl_queen(id2);};
             break;
         case 'pawn':
-            d2.onclick = function() {visl_pawn(id2,img.id[0]);};
-            break;
+            console.log(p1)
+            {
+                if(!checkPawnPromotion(id2))
+                {
+                    d2.onclick = function() {visl_pawn(id2,img.id[0]);};
+                    console.log(id2);
+                }
+                break;
+            }
         case 'knight':
             d2.onclick = function() {visl_knight(id2);};
             break;
@@ -1014,48 +1100,48 @@ function visl_knight(id,ck = false) {
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    let Bknight1=document.getElementById('Bknight1');
-    let Bknight2=document.getElementById('Bknight2');
-    let Wknight1=document.getElementById('Wknight1');
-    let Wknight2=document.getElementById('Wknight2');
+    // let Bknight1=document.getElementById('Bknight1');
+    // let Bknight2=document.getElementById('Bknight2');
+    // let Wknight1=document.getElementById('Wknight1');
+    // let Wknight2=document.getElementById('Wknight2');
 
-    Bknight1.parentNode.onclick = function() {visl_knight(Bknight1.parentElement.id);};
-    Bknight2.parentNode.onclick = function() {visl_knight(Bknight2.parentElement.id);};
+    // Bknight1.parentNode.onclick = function() {visl_knight(Bknight1.parentElement.id);};
+    // Bknight2.parentNode.onclick = function() {visl_knight(Bknight2.parentElement.id);};
 
-    Wknight1.parentNode.onclick = function() {visl_knight(Wknight1.parentElement.id);};
-    Wknight2.parentNode.onclick = function() {visl_knight(Wknight2.parentElement.id);};
+    // Wknight1.parentNode.onclick = function() {visl_knight(Wknight1.parentElement.id);};
+    // Wknight2.parentNode.onclick = function() {visl_knight(Wknight2.parentElement.id);};
 
-    let Bbishop1 = document.getElementById('Bbishop1');
-    let Bbishop2 = document.getElementById('Bbishop2')
-    let Wbishop1 = document.getElementById('Wbishop1')
-    let Wbishop2 = document.getElementById('Wbishop2')
+    // let Bbishop1 = document.getElementById('Bbishop1');
+    // let Bbishop2 = document.getElementById('Bbishop2')
+    // let Wbishop1 = document.getElementById('Wbishop1')
+    // let Wbishop2 = document.getElementById('Wbishop2')
 
-    Bbishop1.parentNode.onclick = function() {visl_biop(Bbishop1.parentElement.id);};
-    Bbishop2.parentNode.onclick = function() {visl_biop(Bbishop2.parentElement.id);};
-    Wbishop1.parentNode.onclick = function() {visl_biop(Wbishop1.parentElement.id);};
-    Wbishop2.parentNode.onclick = function() {visl_biop(Wbishop2.parentElement.id);};
+    // Bbishop1.parentNode.onclick = function() {visl_biop(Bbishop1.parentElement.id);};
+    // Bbishop2.parentNode.onclick = function() {visl_biop(Bbishop2.parentElement.id);};
+    // Wbishop1.parentNode.onclick = function() {visl_biop(Wbishop1.parentElement.id);};
+    // Wbishop2.parentNode.onclick = function() {visl_biop(Wbishop2.parentElement.id);};
 
-    let Brook1 = document.getElementById('Brook1');
-    let Brook2 = document.getElementById('Brook2');
-    let Wrook1 = document.getElementById('Wrook1');
-    let Wrook2 = document.getElementById('Wrook2');
+    // let Brook1 = document.getElementById('Brook1');
+    // let Brook2 = document.getElementById('Brook2');
+    // let Wrook1 = document.getElementById('Wrook1');
+    // let Wrook2 = document.getElementById('Wrook2');
     
-    Brook1.parentNode.onclick = function() {visl_rook(Brook1.parentElement.id);};
-    Brook2.parentNode.onclick = function() {visl_rook(Brook2.parentElement.id);};
-    Wrook1.parentNode.onclick = function() {visl_rook(Wrook1.parentElement.id);};
-    Wrook2.parentNode.onclick = function() {visl_rook(Wrook2.parentElement.id);};
+    // Brook1.parentNode.onclick = function() {visl_rook(Brook1.parentElement.id);};
+    // Brook2.parentNode.onclick = function() {visl_rook(Brook2.parentElement.id);};
+    // Wrook1.parentNode.onclick = function() {visl_rook(Wrook1.parentElement.id);};
+    // Wrook2.parentNode.onclick = function() {visl_rook(Wrook2.parentElement.id);};
 
-    let Bking = document.getElementById('Bking');
-    let Wking = document.getElementById('Wking');
+    // let Bking = document.getElementById('Bking');
+    // let Wking = document.getElementById('Wking');
 
-    Bking.parentNode.onclick = function() {visl_king(Bking.parentElement.id);};
-    Wking.parentNode.onclick = function() {visl_king(Wking.parentElement.id);};
+    // Bking.parentNode.onclick = function() {visl_king(Bking.parentElement.id);};
+    // Wking.parentNode.onclick = function() {visl_king(Wking.parentElement.id);};
 
-    let Bqueen = document.getElementById('Bqueen');
-    let Wqueen = document.getElementById('Wqueen');
+    // let Bqueen = document.getElementById('Bqueen1');
+    // let Wqueen = document.getElementById('Wqueen1');
 
-    Bqueen.parentNode.onclick = function() {visl_queen(Bqueen.parentElement.id);};
-    Wqueen.parentNode.onclick = function() {visl_queen(Wqueen.parentElement.id);};
+    // Bqueen1.parentNode.onclick = function() {visl_queen(Bqueen1.parentElement.id);};
+    // Wqueen1.parentNode.onclick = function() {visl_queen(Wqueen1.parentElement.id);};
 
     let Bpawn1=document.getElementById('Bpawn1');
     let Bpawn2=document.getElementById('Bpawn2');

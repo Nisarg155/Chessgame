@@ -42,3 +42,13 @@ li {
 .second>li:nth-of-type(2n+1) {
     background-color: #ddb180;
 }
+
+#promotion-popup {
+    display: none;
+    position: absolute;
+    background: rgb(244, 9, 9);
+    border: 1px solid black;
+    padding: 10px;
+    margin-left: 42%;
+    z-index: 999;
+}
