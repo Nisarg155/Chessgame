@@ -1,5 +1,5 @@
-let wpieces = ['Wpawn1','Wpawn2','Wpawn3','Wpawn4','Wpawn5','Wpawn6','Wpawn7','Wpawn8','Wrook1','Wknight1','Wbishop1','Wqueen','Wking','Wbishop2','Wknight2','Wrook2'];
-let bpieces = ['Bpawn1','Bpawn2','Bpawn3','Bpawn4','Bpawn5','Bpawn6','Bpawn7','Bpawn8','Brook1','Bknight1','Bbishop1','Bqueen','Bking','Bbishop2','Bknight2','Brook2'];
+let wpieces = ['Wpawn1','Wpawn2','Wpawn3','Wpawn4','Wpawn5','Wpawn6','Wpawn7','Wpawn8','Wrook1','Wknight1','Wbishop1','Wqueen1','Wking','Wbishop2','Wknight2','Wrook2'];
+let bpieces = ['Bpawn1','Bpawn2','Bpawn3','Bpawn4','Bpawn5','Bpawn6','Bpawn7','Bpawn8','Brook1','Bknight1','Bbishop1','Bqueen1','Bking','Bbishop2','Bknight2','Brook2'];
 
 let B_no_of_queen=1;
 let W_no_of_queen=1;
@@ -23,6 +23,7 @@ let moves='W';
 
 function checkPawnPromotion(id) {
     const row = id[0];
+    let pawn = document.getElementById(id).querySelector('img');
     if (moves==='B' && row === '0') {
         promotePawn(id, 'W', (result) => {
             if (result === 1) {
@@ -31,6 +32,10 @@ function checkPawnPromotion(id) {
                 return 1;
             }
         });
+        if(wpieces.includes(pawn.id))
+        {
+            wpieces.splice(wpieces.indexOf(pawn.id),1);
+        }
     } else if (moves==='W' && row === '7') {
         promotePawn(id, 'B', (result) => {
             if (result === 1) {
@@ -39,7 +44,12 @@ function checkPawnPromotion(id) {
                 return 1;
             }
         });
+        if(bpieces.includes(pawn.id))
+        {
+            bpieces.splice(bpieces.indexOf(pawn.id),1);
+        }
     }
+
     return 0;
 }
 
@@ -67,10 +77,9 @@ function promotePawn(id, color, callback) {
         }
 
         const new_id = newPiece + number;
-        console.log(button.textContent);
-        console.log(newPiece);
-        console.log(new_id);
         document.getElementById(id).innerHTML = `<img id="${new_id}" src="photos/${newPiece}.png" style="width: 4.0625rem;">`;
+        if(color == 'W') wpieces.push(new_id);
+        else if(color == 'B') bpieces.push(new_id);
 
         // Call the callback function to indicate a successful promotion
         callback(1);
@@ -173,6 +182,7 @@ function check(id,king_img)
         let piece = pieces_arr[i];
         let piece_img = document.getElementById(piece);
         let parent_id = piece_img.parentElement.id;
+        console.log(piece_img.id);
         if(!isNaN((piece_img.id)[piece_img.id.length - 1]))
         {
             piece = (piece_img.id).slice(1,piece_img.id.length - 1);
