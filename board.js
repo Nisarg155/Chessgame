@@ -1,6 +1,7 @@
 let wpieces = ['Wpawn1', 'Wpawn2', 'Wpawn3', 'Wpawn4', 'Wpawn5', 'Wpawn6', 'Wpawn7', 'Wpawn8', 'Wrook1', 'Wknight1', 'Wbishop1', 'Wqueen1', 'Wking', 'Wbishop2', 'Wknight2', 'Wrook2'];
 let bpieces = ['Bpawn1', 'Bpawn2', 'Bpawn3', 'Bpawn4', 'Bpawn5', 'Bpawn6', 'Bpawn7', 'Bpawn8', 'Brook1', 'Bknight1', 'Bbishop1', 'Bqueen1', 'Bking', 'Bbishop2', 'Bknight2', 'Brook2'];
 
+let checkmate_flag = false;
 let B_no_of_queen = 1;
 let W_no_of_queen = 1;
 let B_no_of_rook = 2;
@@ -458,6 +459,10 @@ function move_to(id1, id2, cstl = false) {
                 if (checkmate(Wid)) {
                     Wking.parentNode.style.backgroundColor = 'red';
                     setTimeout(() => {alert('Check');}, 25);
+                    checkmate_flag = true;
+                }
+                else {
+                    checkmate_flag = false;
                 }
                 
             },50);
@@ -470,6 +475,10 @@ function move_to(id1, id2, cstl = false) {
                 if (checkmate(Bid)) {
                     Bking.parentNode.style.backgroundColor = 'red';
                     setTimeout(() => {alert('Check');}, 25);
+                    checkmate_flag = true;
+                }
+                else{
+                    checkmate_flag = false;
                 }
                 
             },50);
@@ -711,7 +720,7 @@ function visl_biop(id, ck = false) {
     }
     else {
         undraw(board); //change
-        if (movement_check(id)) {
+        if (movement_check(id) || checkmate_flag) {
             let clr = idm[0];
             top_left = movement_check_attack(id, top_left, clr);
             top_right = movement_check_attack(id, top_right, clr);
@@ -786,7 +795,7 @@ function visl_rook(id, ck = false) {
     }
     else {
         undraw(board);
-        if (movement_check(id)) {
+        if (movement_check(id) || checkmate_flag) {
             let clr = idm[0];
             front = movement_check_attack(id, front, clr);
             back = movement_check_attack(id, back, clr);
@@ -999,7 +1008,7 @@ function visl_queen(id, ck = false) {
     }
     else {
         undraw(board);
-        if (movement_check(id)) {
+        if (movement_check(id) || checkmate_flag) {
             let clr = idm[0];
             top_left = movement_check_attack(id, top_left, clr);
             top_right = movement_check_attack(id, top_right, clr);
@@ -1081,7 +1090,7 @@ function visl_pawn(id, color, ck = false) {
     }
     else {
         undraw(board);
-        if (movement_check(id)) {
+        if (movement_check(id) || checkmate_flag) {
             let clr = idm[0];
             movement = movement_check_attack(id, movement, clr);
         }
@@ -1117,7 +1126,7 @@ function visl_knight(id, ck = false) {
     }
     else {
         undraw(board);
-        if (movement_check(id)) {
+        if (movement_check(id) || checkmate_flag) {
             let clr = idm[0];
             array = movement_check_attack(id, array, clr);
         }
