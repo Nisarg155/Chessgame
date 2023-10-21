@@ -53,7 +53,6 @@ function movement_check_attack(id, array, clr) {
 }
 
 function movement_check(id) {
-    console.log(document.getElementById(id).querySelector('img').id);
     let image = (document.getElementById(id)).querySelector('img');
     document.getElementById(id).removeChild(image);
     let con;
@@ -89,7 +88,6 @@ function checkPawnPromotion(id) {
         promotePawn(id, 'W', (result) => {
             if (result === 1) {
                 // Handle the promotion result
-                console.log('Promotion successful White');
                 return 1;
             }
         });
@@ -100,7 +98,6 @@ function checkPawnPromotion(id) {
         promotePawn(id, 'B', (result) => {
             if (result === 1) {
                 // Handle the promotion result
-                console.log('Promotion successful');
                 return 1;
             }
         });
@@ -230,7 +227,6 @@ function check(id, king_img) {
         let piece = pieces_arr[i];
         let piece_img = document.getElementById(piece);
         let parent_id = piece_img.parentElement.id;
-        console.log(piece_img.id);
         if (!isNaN((piece_img.id)[piece_img.id.length - 1])) {
             piece = (piece_img.id).slice(1, piece_img.id.length - 1);
         }
@@ -416,46 +412,70 @@ function move_to(id1, id2, cstl = false) {
         }
         d2.removeChild(p2);
     }
-    d2.appendChild(img);
-    d2.classList.remove('clicked');
-    d1.onclick = null;
-    d2.classList.remove('clicked');
-    switch (p1) {
-        case 'bishop':
-            d2.onclick = function () { visl_biop(id2); };
-            break;
-        case 'rook':
-            img.classList.add('moved');
-            d2.onclick = function () { visl_rook(id2); };
-            break;
-        case 'king':
-            d2.onclick = null;
-            img.classList.add('moved');
-            d2.onclick = function () { visl_king(id2); };
-            break;
-        case 'queen':
-            d2.onclick = null;
-            d2.onclick = function () { visl_queen(id2); };
-            break;
-        case 'pawn':
-            console.log(p1)
-            {
-                if (!checkPawnPromotion(id2)) {
-                    d2.onclick = function () { visl_pawn(id2, img.id[0]); };
-                    console.log(id2);
-                }
+ 
+
+    const move_image = new Promise((resolve, reject) => {
+        d2.appendChild(img);
+        d2.classList.remove('clicked');
+        d1.onclick = null;
+        d2.classList.remove('clicked');
+        switch (p1) {
+            case 'bishop':
+                d2.onclick = function () { visl_biop(id2); };
                 break;
-            }
-        case 'knight':
-            d2.onclick = function () { visl_knight(id2); };
-            break;
-    }
-    if (moves == 'W') {
-        let Bking = document.getElementById('Bking');
-        let Wking = document.getElementById('Wking');
-        let Bid = Wking.parentElement.id;
-        let Wid = Bking.parentElement.id;
-    }
+            case 'rook':
+                img.classList.add('moved');
+                d2.onclick = function () { visl_rook(id2); };
+                break;
+            case 'king':
+                d2.onclick = null;
+                img.classList.add('moved');
+                d2.onclick = function () { visl_king(id2); };
+                break;
+            case 'queen':
+                d2.onclick = null;
+                d2.onclick = function () { visl_queen(id2); };
+                break;
+            case 'pawn':
+                {
+                    if (!checkPawnPromotion(id2)) {
+                        d2.onclick = function () { visl_pawn(id2, img.id[0]); };
+                    }
+                    break;
+                }
+            case 'knight':
+                d2.onclick = function () { visl_knight(id2); };
+                break;
+        }
+        resolve();
+    });
+
+    move_image.then(() => {
+        if (moves == 'W') {
+            let Wking = document.getElementById('Wking');
+            let Wid = Wking.parentElement.id;
+            setTimeout(() => {
+                if (checkmate(Wid)) {
+                    Wking.parentNode.style.backgroundColor = 'red';
+                    setTimeout(() => {alert('Check');}, 25);
+                }
+                
+            },50);
+            
+        }
+        else if(moves == 'B') {
+            let Bking = document.getElementById('Bking');
+            let Bid = Bking.parentElement.id;
+            setTimeout(() => {
+                if (checkmate(Bid)) {
+                    Bking.parentNode.style.backgroundColor = 'red';
+                    setTimeout(() => {alert('Check');}, 25);
+                }
+                
+            },50);
+        }
+    });
+    
 }
 
 function modify(cross, idm, id) {
