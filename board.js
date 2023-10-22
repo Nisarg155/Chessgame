@@ -11,6 +11,44 @@ let W_no_of_knight = 2;
 let B_no_of_bishop = 2;
 let W_no_of_bishop = 2;
 
+function movement_check_king(id,array,clr)
+{
+    let arr = [];
+    let king_img = document.getElementById(id).querySelector('img');
+    let king_div = document.getElementById(id);
+    array.forEach((element) =>{
+        let div = document.getElementById(element);
+        let cid = div.querySelector('img');
+        if(!cid)
+        {
+            if(!checkmate(id))
+            {
+                arr.push(element);
+            }
+        }
+        else{
+            let cclr = (cid.id)[0];
+            if(cclr != clr)
+            {
+                div.removeChild(cid);
+                if(cclr == 'W') wpieces.splice(wpieces.indexOf(cid.id),1);
+                else if(cclr == 'B') bpieces.splice(bpieces.indexOf(cid.id),1);
+                if(!checkmate(id))
+                {
+                    arr.push(element);
+                }
+                if(cclr == 'W') wpieces.push(cid.id);
+                else if(cclr == 'B') bpieces.push(cid.id);
+                div.appendChild(cid);
+            }
+        }
+        king_div.appendChild(king_img);
+    })
+
+    return arr;
+
+}
+
 function movement_check_attack(id, array, clr) {
     let arr = [];
     let king_img;
@@ -457,9 +495,10 @@ function move_to(id1, id2, cstl = false) {
             let Wid = Wking.parentElement.id;
             setTimeout(() => {
                 if (checkmate(Wid)) {
+                    checkmate_flag = true;
                     Wking.parentNode.style.backgroundColor = 'red';
                     setTimeout(() => {alert('Check');}, 25);
-                    checkmate_flag = true;
+                    
                 }
                 else {
                     checkmate_flag = false;
@@ -473,9 +512,10 @@ function move_to(id1, id2, cstl = false) {
             let Bid = Bking.parentElement.id;
             setTimeout(() => {
                 if (checkmate(Bid)) {
+                    checkmate_flag = true;
                     Bking.parentNode.style.backgroundColor = 'red';
                     setTimeout(() => {alert('Check');}, 25);
-                    checkmate_flag = true;
+                    
                 }
                 else{
                     checkmate_flag = false;
@@ -897,6 +937,7 @@ function visl_king(id, ck = false, cstl = false) {
     else {
         undraw(board);
         let result = castling(id);
+        movement = movement_check_king(id, movement, idm[0]);
         ele.classList.add('clicked');
         draw_s(movement, idm, id, result);
     }
