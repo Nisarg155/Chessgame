@@ -19,14 +19,13 @@ function move_to_check()
         setTimeout(() => {
             if (checkmate(Wid)) {
                 checkmate_flag = true;
-                Wking.parentNode.style.backgroundColor = 'red';
-                console.log(end_game(Wking,'W'));
                 if(end_game(Wking,'W'))
                 {
-                    setTimeout(() => {alert('Checkmate');}, 25);
+                    setTimeout(() => {alert('Checkmate , Black Wins');}, 25);
                     return;
                 }
-                setTimeout(() => {alert('Check m2c');}, 25);
+                Wking.parentNode.style.backgroundColor = 'red';
+                setTimeout(() => {alert('Check');}, 25);
                 
             }
             else {
@@ -42,14 +41,13 @@ function move_to_check()
         setTimeout(() => {
             if (checkmate(Bid)) {
                 checkmate_flag = true;
-                Bking.parentNode.style.backgroundColor = 'red';
-                console.log(end_game(Bking,'B'));
                 if(end_game(Bking,'B'))
                 {
-                    setTimeout(() => {alert('Checkmate abcd');}, 25);
+                    setTimeout(() => {alert('Checkmate , White wins');}, 25);
                     return;
                 }
-                setTimeout(() => {alert('Check mtc');}, 25);
+                Bking.parentNode.style.backgroundColor = 'red';
+                setTimeout(() => {alert('Check');}, 25);
                 
             }
             else{
@@ -88,33 +86,27 @@ function end_game(king_img,clr) {
         switch(piece) {
             case 'bishop':
                 arr = arr.concat(visl_biop(parent_id, false,true));
-                console.log(arr);
                 if(arr.length != 0) return false;
                 break;
             case 'rook':
                 arr = arr.concat(visl_rook(parent_id, false,true));
-                console.log(arr);
                 if(arr.length != 0) return false;
 
                 break;
             case 'king':
                 arr  = arr.concat( visl_king(parent_id, false,true));
-                console.log(arr);
                 if(arr.length != 0) return false;
                 break;
             case 'queen':
                 arr = arr.concat(visl_queen(parent_id, false,true));
-                console.log(arr);
                 if(arr.length != 0) return false;
                 break;
             case 'pawn':
                 arr =  arr.concat(visl_pawn(parent_id, piece_img.id[0], false,true));
-                console.log(piece_img);
                 if(arr.length != 0) return false;
                 break;
             case 'knight':
                 arr =  arr.concat(visl_knight(parent_id, false,true));
-                console.log(arr);
                 if(arr.length != 0) return false;
                 break;
         }
@@ -292,13 +284,12 @@ function promotePawn(id, color, callback) {
                 let Wid = Wking.parentElement.id;
                 if (checkmate(Wid)) {
                     checkmate_flag = true;
-                    Wking.parentNode.style.backgroundColor = 'red';
-                    console.log(end_game(Wking, 'W'));
                     if (end_game(Wking, 'W')) {
-                        setTimeout(() => { alert('Checkmate'); }, 25);
+                        setTimeout(() => { alert('Checkmate , Black Wins'); }, 25);
                         return;
                     }
-                    setTimeout(() => { alert('Check pp '); }, 25);
+                    Wking.parentNode.style.backgroundColor = 'red';
+                    setTimeout(() => { alert('Check'); }, 25);
 
                 }
                 else {
@@ -310,13 +301,12 @@ function promotePawn(id, color, callback) {
                 let Bid = Bking.parentElement.id;
                 if (checkmate(Bid)) {
                     checkmate_flag = true;
-                    Bking.parentNode.style.backgroundColor = 'red';
-                    console.log(end_game(Bking, 'B'));
                     if (end_game(Bking, 'B')) {
-                        setTimeout(() => { alert('Checkmate'); }, 25);
+                        setTimeout(() => { alert('Checkmate , White wins'); }, 25);
                         return;
                     }
-                    setTimeout(() => { alert('Check pp '); }, 25);
+                    Bking.parentNode.style.backgroundColor = 'red';
+                    setTimeout(() => { alert('Check'); }, 25);
 
                 }
                 else {
@@ -429,43 +419,36 @@ function check(id, king_img) {
             case 'bishop':
                 arr = visl_biop(parent_id, true);
                 if (arr.includes(id)) {
-                    // console.log('collision in bishop');
                     return true;
                 }
                 break;
             case 'rook':
                 arr = visl_rook(parent_id, true);
                 if (arr.includes(id)) {
-                    // console.log('collision in rook');
                     return true;
                 }
                 break;
             case 'king':
                 arr = visl_king(parent_id, true);
                 if (arr.includes(id)) {
-                    // console.log('collision in king');
                     return true;
                 }
                 break;
             case 'queen':
                 arr = visl_queen(parent_id, true);
                 if (arr.includes(id)) {
-                    // console.log(id, piece_img);
-                    // console.log('collision in queen');
                     return true;
                 }
                 break;
             case 'pawn':
                 arr = visl_pawn(parent_id, piece_img.id[0], true);
                 if (arr.includes(id)) {
-                    // console.log('collision in pawn');
                     return true;
                 }
                 break;
             case 'knight':
                 arr = visl_knight(parent_id, true);
                 if (arr.includes(id)) {
-                    // console.log('collision in knight');
                     return true;
                 }
                 break;
@@ -1087,7 +1070,6 @@ function visl_king(id, ck = false, cstl = false , game_end = false) {
         movement = movement_check_king(id, movement, idm[0]);
         if(game_end || checkmate_flag)
         {
-            console.log(movement);
             return movement;
 
         }
