@@ -1,6 +1,6 @@
 let wpieces = ['Wpawn1', 'Wpawn2', 'Wpawn3', 'Wpawn4', 'Wpawn5', 'Wpawn6', 'Wpawn7', 'Wpawn8', 'Wrook1', 'Wknight1', 'Wbishop1', 'Wqueen1', 'Wking', 'Wbishop2', 'Wknight2', 'Wrook2'];
 let bpieces = ['Bpawn1', 'Bpawn2', 'Bpawn3', 'Bpawn4', 'Bpawn5', 'Bpawn6', 'Bpawn7', 'Bpawn8', 'Brook1', 'Bknight1', 'Bbishop1', 'Bqueen1', 'Bking', 'Bbishop2', 'Bknight2', 'Brook2'];
-
+let moves = 'W';
 let checkmate_flag = false;
 let B_no_of_queen = 1;
 let W_no_of_queen = 1;
@@ -10,6 +10,117 @@ let B_no_of_knight = 2;
 let W_no_of_knight = 2;
 let B_no_of_bishop = 2;
 let W_no_of_bishop = 2;
+
+function move_to_check()
+{
+    if (moves == 'W') {
+        let Wking = document.getElementById('Wking');
+        let Wid = Wking.parentElement.id;
+        setTimeout(() => {
+            if (checkmate(Wid)) {
+                checkmate_flag = true;
+                Wking.parentNode.style.backgroundColor = 'red';
+                console.log(end_game(Wking,'W'));
+                if(end_game(Wking,'W'))
+                {
+                    setTimeout(() => {alert('Checkmate');}, 25);
+                    return;
+                }
+                setTimeout(() => {alert('Check m2c');}, 25);
+                
+            }
+            else {
+                checkmate_flag = false;
+            }
+            
+        },50);
+        
+    }
+    else if(moves == 'B') {
+        let Bking = document.getElementById('Bking');
+        let Bid = Bking.parentElement.id;
+        setTimeout(() => {
+            if (checkmate(Bid)) {
+                checkmate_flag = true;
+                Bking.parentNode.style.backgroundColor = 'red';
+                console.log(end_game(Bking,'B'));
+                if(end_game(Bking,'B'))
+                {
+                    setTimeout(() => {alert('Checkmate abcd');}, 25);
+                    return;
+                }
+                setTimeout(() => {alert('Check mtc');}, 25);
+                
+            }
+            else{
+                checkmate_flag = false;
+            }
+            
+        },50);
+    }
+
+
+}
+
+function end_game(king_img,clr) {
+    let pieces_arr = [];
+    let len;
+    if (clr == 'W') {
+        pieces_arr = wpieces;
+        len = pieces_arr.length;
+    }
+    else if (clr == 'B') {
+        pieces_arr = bpieces;
+        len = pieces_arr.length;
+    }
+
+    for (let i = 0; i < len; i++) {
+        let piece = pieces_arr[i];
+        let piece_img = document.getElementById(piece);
+        let parent_id = piece_img.parentElement.id;
+        if (!isNaN((piece_img.id)[piece_img.id.length - 1])) {
+            piece = (piece_img.id).slice(1, piece_img.id.length - 1);
+        }
+        else {
+            piece = (piece_img.id).slice(1);
+        }
+        let arr = [];
+        switch(piece) {
+            case 'bishop':
+                arr = arr.concat(visl_biop(parent_id, false,true));
+                console.log(arr);
+                if(arr.length != 0) return false;
+                break;
+            case 'rook':
+                arr = arr.concat(visl_rook(parent_id, false,true));
+                console.log(arr);
+                if(arr.length != 0) return false;
+
+                break;
+            case 'king':
+                arr  = arr.concat( visl_king(parent_id, false,true));
+                console.log(arr);
+                if(arr.length != 0) return false;
+                break;
+            case 'queen':
+                arr = arr.concat(visl_queen(parent_id, false,true));
+                console.log(arr);
+                if(arr.length != 0) return false;
+                break;
+            case 'pawn':
+                arr =  arr.concat(visl_pawn(parent_id, piece_img.id[0], false,true));
+                console.log(piece_img);
+                if(arr.length != 0) return false;
+                break;
+            case 'knight':
+                arr =  arr.concat(visl_knight(parent_id, false,true));
+                console.log(arr);
+                if(arr.length != 0) return false;
+                break;
+        }
+    }
+    return true;
+}
 
 function movement_check_king(id,array,clr)
 {
@@ -21,7 +132,7 @@ function movement_check_king(id,array,clr)
         let cid = div.querySelector('img');
         if(!cid)
         {
-            if(!checkmate(id))
+            if(!check(element,king_img))
             {
                 arr.push(element);
             }
@@ -33,7 +144,7 @@ function movement_check_king(id,array,clr)
                 div.removeChild(cid);
                 if(cclr == 'W') wpieces.splice(wpieces.indexOf(cid.id),1);
                 else if(cclr == 'B') bpieces.splice(bpieces.indexOf(cid.id),1);
-                if(!checkmate(id))
+                if(!check(element,king_img))
                 {
                     arr.push(element);
                 }
@@ -118,7 +229,7 @@ let board = ['00', '10', '20', '30', '40', '50', '60', '70', //change
     '06', '16', '26', '36', '46', '56', '66', '76', //change
     '07', '17', '27', '37', '47', '57', '67', '77' //change
 ];
-let moves = 'W';
+
 
 function checkPawnPromotion(id) {
     const row = id[0];
@@ -175,6 +286,44 @@ function promotePawn(id, color, callback) {
         document.getElementById(id).innerHTML = `<img id="${new_id}" src="photos/${newPiece}.png" style="width: 4.0625rem;">`;
         if (color == 'W') wpieces.push(new_id);
         else if (color == 'B') bpieces.push(new_id);
+        setTimeout(() => {
+            if (moves == 'W') {
+                let Wking = document.getElementById('Wking');
+                let Wid = Wking.parentElement.id;
+                if (checkmate(Wid)) {
+                    checkmate_flag = true;
+                    Wking.parentNode.style.backgroundColor = 'red';
+                    console.log(end_game(Wking, 'W'));
+                    if (end_game(Wking, 'W')) {
+                        setTimeout(() => { alert('Checkmate'); }, 25);
+                        return;
+                    }
+                    setTimeout(() => { alert('Check pp '); }, 25);
+
+                }
+                else {
+                    checkmate_flag = false;
+                }
+            }
+            else if (moves == 'B') {
+                let Bking = document.getElementById('Bking');
+                let Bid = Bking.parentElement.id;
+                if (checkmate(Bid)) {
+                    checkmate_flag = true;
+                    Bking.parentNode.style.backgroundColor = 'red';
+                    console.log(end_game(Bking, 'B'));
+                    if (end_game(Bking, 'B')) {
+                        setTimeout(() => { alert('Checkmate'); }, 25);
+                        return;
+                    }
+                    setTimeout(() => { alert('Check pp '); }, 25);
+
+                }
+                else {
+                    checkmate_flag = false;
+                }
+            }
+        });
 
         // Call the callback function to indicate a successful promotion
         callback(1);
@@ -191,6 +340,9 @@ function promotePawn(id, color, callback) {
             promotionDialog.style.display = 'none';
         });
     });
+
+    setTimeout(() => {
+    },100);
 }
 
 function checkmate(id) {
@@ -277,43 +429,43 @@ function check(id, king_img) {
             case 'bishop':
                 arr = visl_biop(parent_id, true);
                 if (arr.includes(id)) {
-                    console.log('collision in bishop');
+                    // console.log('collision in bishop');
                     return true;
                 }
                 break;
             case 'rook':
                 arr = visl_rook(parent_id, true);
                 if (arr.includes(id)) {
-                    console.log('collision in rook');
+                    // console.log('collision in rook');
                     return true;
                 }
                 break;
             case 'king':
                 arr = visl_king(parent_id, true);
                 if (arr.includes(id)) {
-                    console.log('collision in king');
+                    // console.log('collision in king');
                     return true;
                 }
                 break;
             case 'queen':
                 arr = visl_queen(parent_id, true);
                 if (arr.includes(id)) {
-                    console.log(id, piece_img);
-                    console.log('collision in queen');
+                    // console.log(id, piece_img);
+                    // console.log('collision in queen');
                     return true;
                 }
                 break;
             case 'pawn':
                 arr = visl_pawn(parent_id, piece_img.id[0], true);
                 if (arr.includes(id)) {
-                    console.log('collision in pawn');
+                    // console.log('collision in pawn');
                     return true;
                 }
                 break;
             case 'knight':
                 arr = visl_knight(parent_id, true);
                 if (arr.includes(id)) {
-                    console.log('collision in knight');
+                    // console.log('collision in knight');
                     return true;
                 }
                 break;
@@ -490,39 +642,7 @@ function move_to(id1, id2, cstl = false) {
     });
 
     move_image.then(() => {
-        if (moves == 'W') {
-            let Wking = document.getElementById('Wking');
-            let Wid = Wking.parentElement.id;
-            setTimeout(() => {
-                if (checkmate(Wid)) {
-                    checkmate_flag = true;
-                    Wking.parentNode.style.backgroundColor = 'red';
-                    setTimeout(() => {alert('Check');}, 25);
-                    
-                }
-                else {
-                    checkmate_flag = false;
-                }
-                
-            },50);
-            
-        }
-        else if(moves == 'B') {
-            let Bking = document.getElementById('Bking');
-            let Bid = Bking.parentElement.id;
-            setTimeout(() => {
-                if (checkmate(Bid)) {
-                    checkmate_flag = true;
-                    Bking.parentNode.style.backgroundColor = 'red';
-                    setTimeout(() => {alert('Check');}, 25);
-                    
-                }
-                else{
-                    checkmate_flag = false;
-                }
-                
-            },50);
-        }
+        move_to_check();
     });
     
 }
@@ -691,7 +811,7 @@ function undraw(array, id = null) {
 
 }
 
-function visl_biop(id, ck = false) {
+function visl_biop(id, ck = false,game_end = false) {
     let top_left = [];
     let top_right = [];
     let bottom_left = [];
@@ -760,12 +880,25 @@ function visl_biop(id, ck = false) {
     }
     else {
         undraw(board); //change
-        if (movement_check(id) || checkmate_flag) {
+        if (movement_check(id) || checkmate_flag || game_end) {
             let clr = idm[0];
+            top_left = collision(top_left, idm, id);
+            top_right = collision(top_right, idm, id);
+            bottom_right = collision(bottom_right, idm, id);
+            bottom_left = collision(bottom_left, idm, id);
             top_left = movement_check_attack(id, top_left, clr);
             top_right = movement_check_attack(id, top_right, clr);
             bottom_right = movement_check_attack(id, bottom_right, clr);
             bottom_left = movement_check_attack(id, bottom_left, clr);
+            if(game_end)
+            {
+                let arr = [];
+                arr = arr.concat(top_left);
+                arr = arr.concat(top_right);
+                arr = arr.concat(bottom_right);
+                arr = arr.concat(bottom_left);
+                return arr;
+            }
         }
         ele.classList.add('clicked');
         draw(top_left, idm, id);
@@ -775,7 +908,7 @@ function visl_biop(id, ck = false) {
     }
 }
 
-function visl_rook(id, ck = false) {
+function visl_rook(id, ck = false , game_end = false) {
     let front = [];
     let back = [];
     let right = [];
@@ -835,12 +968,25 @@ function visl_rook(id, ck = false) {
     }
     else {
         undraw(board);
-        if (movement_check(id) || checkmate_flag) {
+        if (movement_check(id) || checkmate_flag || game_end) {
             let clr = idm[0];
+            front = collision(front, idm, id);
+            back = collision(back, idm, id);
+            right = collision(right, idm, id);
+            left = collision(left, idm, id);
             front = movement_check_attack(id, front, clr);
             back = movement_check_attack(id, back, clr);
             right = movement_check_attack(id, right, clr);
             left = movement_check_attack(id, left, clr);
+            if(game_end)
+            {
+                let arr = [];
+                arr = arr.concat(front);
+                arr = arr.concat(back);
+                arr = arr.concat(right);
+                arr = arr.concat(left);
+                return arr;
+            }
         }
         draw(front, idm, id);
         draw(back, idm, id);
@@ -851,7 +997,7 @@ function visl_rook(id, ck = false) {
 
 }
 
-function visl_king(id, ck = false, cstl = false) {
+function visl_king(id, ck = false, cstl = false , game_end = false) {
     let row = parseInt(id[0]);
     let col = parseInt(id[1]);
 
@@ -937,14 +1083,21 @@ function visl_king(id, ck = false, cstl = false) {
     else {
         undraw(board);
         let result = castling(id);
+        movement = kk_check(movement, idm);
         movement = movement_check_king(id, movement, idm[0]);
+        if(game_end || checkmate_flag)
+        {
+            console.log(movement);
+            return movement;
+
+        }
         ele.classList.add('clicked');
         draw_s(movement, idm, id, result);
     }
 
 }
 
-function visl_queen(id, ck = false) {
+function visl_queen(id, ck = false,game_end = false) {
     // visl_biop(id);
     // visl_rook(id);
     let top_left = [];
@@ -1049,8 +1202,16 @@ function visl_queen(id, ck = false) {
     }
     else {
         undraw(board);
-        if (movement_check(id) || checkmate_flag) {
+        if (movement_check(id) || checkmate_flag || game_end) {
             let clr = idm[0];
+            top_left = collision(top_left, idm, id);
+            top_right = collision(top_right, idm, id);
+            bottom_right = collision(bottom_right, idm, id);
+            bottom_left = collision(bottom_left, idm, id);
+            front = collision(front, idm, id);
+            back = collision(back, idm, id);
+            right = collision(right, idm, id);
+            left = collision(left, idm, id);
             top_left = movement_check_attack(id, top_left, clr);
             top_right = movement_check_attack(id, top_right, clr);
             bottom_right = movement_check_attack(id, bottom_right, clr);
@@ -1059,6 +1220,19 @@ function visl_queen(id, ck = false) {
             back = movement_check_attack(id, back, clr);
             right = movement_check_attack(id, right, clr);
             left = movement_check_attack(id, left, clr);
+            if(game_end)
+            {
+                let arr = [];
+                arr = arr.concat(top_left);
+                arr = arr.concat(top_right);
+                arr = arr.concat(bottom_right);
+                arr = arr.concat(bottom_left);
+                arr = arr.concat(front);
+                arr = arr.concat(back);
+                arr = arr.concat(right);
+                arr = arr.concat(left);
+                return arr;
+            }
         }
         div.classList.add('clicked');
         draw(front, idm, id),
@@ -1067,7 +1241,7 @@ function visl_queen(id, ck = false) {
     }
 }
 
-function visl_pawn(id, color, ck = false) {
+function visl_pawn(id, color, ck = false,game_end = false) {
     let movement = [];
 
     let row = parseInt(id[0]);
@@ -1131,9 +1305,19 @@ function visl_pawn(id, color, ck = false) {
     }
     else {
         undraw(board);
-        if (movement_check(id) || checkmate_flag) {
+        if (movement_check(id) || checkmate_flag || game_end) {
             let clr = idm[0];
+            movement = collision(movement, idm, id);
+            cross = collision(cross, idm, id);
             movement = movement_check_attack(id, movement, clr);
+            cross = movement_check_attack(id, cross, clr);
+            if(game_end)
+            {
+                let arr = [];
+                arr = arr.concat(movement);
+                arr = arr.concat(cross);
+                return arr;
+            }
         }
         div.classList.add('clicked')
         draw(movement, idm, id);
@@ -1141,7 +1325,7 @@ function visl_pawn(id, color, ck = false) {
     }
 }
 
-function visl_knight(id, ck = false) {
+function visl_knight(id, ck = false , game_end = false) {
     let delrc = [[-1, -2], [-2, -1], [-2, 1], [-1, 2], [1, 2], [2, 1], [2, -1], [1, -2]];
     let array = [];
     delrc.forEach(element => {
@@ -1167,9 +1351,14 @@ function visl_knight(id, ck = false) {
     }
     else {
         undraw(board);
-        if (movement_check(id) || checkmate_flag) {
+        if (movement_check(id) || checkmate_flag || game_end) {
             let clr = idm[0];
+            array = kk_check(array, idm);
             array = movement_check_attack(id, array, clr);
+            if(game_end)
+            {
+                return array;
+            }
         }
         div.classList.add('clicked');
         draw_s(array, idm, id);
